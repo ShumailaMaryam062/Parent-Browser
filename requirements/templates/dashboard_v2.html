@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🧠 LimitX Intelligence Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         * {
@@ -13,89 +16,160 @@
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            /* Use provided desktop image as theme background (file URL). Spaces are allowed; wrap in quotes. */
+            background: url("file:///C:/Users/Hp/Desktop/browser 1.jpg") center/cover no-repeat fixed;
+            /* subtle overlay to keep text readable */
+            background-color: rgba(15, 23, 42, 0.35);
+            background-blend-mode: overlay;
             min-height: 100vh;
-            padding: 20px;
-            color: #1e293b;
+            padding: 15px;
+            color: #e2e8f0;
         }
         
         .container {
             max-width: 1400px;
+            width: 95%;
             margin: 0 auto;
+            padding: 0 20px;
         }
         
         .header {
             text-align: center;
-            padding: 30px 20px;
-            background: white;
+            padding: 25px 20px;
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
             border-radius: 20px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(79, 70, 229, 0.4);
+            margin-bottom: 20px;
+            border: 2px solid rgba(139, 92, 246, 0.3);
         }
         
         .header h1 {
-            font-size: 2.5rem;
-            color: #0c4a6e;
-            margin-bottom: 10px;
+            font-size: 2.2rem;
+            color: #c7d2fe;
+            margin-bottom: 8px;
+            text-shadow: 0 0 20px rgba(129, 140, 248, 0.5);
         }
         
         .header p {
-            font-size: 1.1rem;
-            color: #64748b;
+            font-size: 1rem;
+            color: #a5b4fc;
         }
         
         .login-box {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            margin: 20px auto;
+            background: linear-gradient(135deg, rgba(30, 27, 75, 0.95) 0%, rgba(49, 46, 129, 0.95) 100%);
+            border-radius: 25px;
+            padding: 35px 45px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 80px rgba(139, 92, 246, 0.2);
+            margin: 15px auto;
             max-width: 600px;
+            border: 2px solid rgba(139, 92, 246, 0.4);
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .login-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, transparent 70%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.5; }
+            50% { transform: scale(1.1) rotate(180deg); opacity: 0.8; }
+        }
+        
+        .login-box > * {
+            position: relative;
+            z-index: 1;
         }
         
         .input-group {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
         
         .input-group label {
             display: block;
             margin-bottom: 8px;
-            color: #475569;
-            font-weight: 600;
+            color: #c7d2fe;
+            font-size: 1rem;
+            font-weight: 700;
         }
         
         .input-group input {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
+            padding: 14px 16px;
+            border: 2px solid rgba(139, 92, 246, 0.5);
+            background: rgba(30, 27, 75, 0.6);
+            color: #e2e8f0;
+            border-radius: 12px;
             font-size: 1rem;
-            font-family: monospace;
-            transition: border-color 0.3s;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
         }
         
         .input-group input:focus {
             outline: none;
-            border-color: #3b82f6;
+            border-color: #8b5cf6;
+            box-shadow: 0 0 25px rgba(139, 92, 246, 0.6), inset 0 2px 4px rgba(0, 0, 0, 0.2);
+            background: rgba(30, 27, 75, 0.8);
+            transform: translateY(-2px);
+        }
+        
+        .input-group input::placeholder {
+            color: rgba(165, 180, 252, 0.5);
         }
         
         .btn {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
             color: white;
             border: none;
-            border-radius: 10px;
-            font-size: 1rem;
-            font-weight: 600;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 25px rgba(139, 92, 246, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
         }
         
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 35px rgba(139, 92, 246, 0.6);
+        }
+        
+        .btn:active {
+            transform: translateY(-1px);
         }
         
         .btn:disabled {
@@ -104,15 +178,15 @@
         }
         
         .btn.secondary {
-            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
         }
         
         .btn.danger {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
         }
         
         .btn.success {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
         }
         
         .dashboard {
@@ -124,20 +198,25 @@
         }
         
         .section {
-            background: white;
+            background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
             border-radius: 20px;
-            padding: 30px;
+            padding: 40px;
             margin-bottom: 30px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 8px 32px rgba(79, 70, 229, 0.4);
+            border: 2px solid rgba(139, 92, 246, 0.2);
+            max-width: 1400px;
+            margin-left: auto;
+            margin-right: auto;
         }
         
         .section h2 {
-            color: #0c4a6e;
+            color: #c7d2fe;
             margin-bottom: 20px;
-            font-size: 1.8rem;
+            font-size: 2rem;
             display: flex;
             align-items: center;
             gap: 10px;
+            text-shadow: 0 0 15px rgba(129, 140, 248, 0.4);
         }
         
         .sentiment-badge {
@@ -172,50 +251,52 @@
         }
         
         .stat-card {
-            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            background: linear-gradient(135deg, #312e81 0%, #4c1d95 100%);
             border-radius: 15px;
-            padding: 25px;
-            border-left: 4px solid #3b82f6;
+            padding: 35px;
+            border-left: 4px solid #8b5cf6;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
         }
         
         .stat-card h3 {
-            font-size: 0.9rem;
-            color: #64748b;
+            font-size: 1rem;
+            color: #c7d2fe;
             margin-bottom: 10px;
             text-transform: uppercase;
-            font-weight: 600;
+            font-weight: 700;
         }
         
         .stat-card .value {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #0c4a6e;
+            font-size: 3rem;
+            font-weight: 700;
+            color: #a5b4fc;
         }
         
         .stat-card .label {
-            font-size: 0.85rem;
-            color: #64748b;
+            font-size: 1rem;
+            color: #9ca3af;
             margin-top: 5px;
         }
         
         .charts-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 25px;
             margin-top: 20px;
         }
         
         .chart-container {
-            background: white;
+            background: linear-gradient(135deg, #312e81 0%, #1e1b4b 100%);
             border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(79, 70, 229, 0.3);
+            border: 1px solid rgba(139, 92, 246, 0.2);
         }
         
         .chart-container h3 {
-            color: #0c4a6e;
-            margin-bottom: 15px;
-            font-size: 1.2rem;
+            color: #c7d2fe;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
         }
         
         .conversation-starters {
@@ -447,31 +528,37 @@
         
         <!-- Login Section -->
         <div id="loginSection" class="login-box">
-            <h2 style="margin-bottom: 15px; color: #0c4a6e;">Access Intelligence Dashboard</h2>
-            <p style="color: #64748b; margin-bottom: 25px;">
-                Enter your blockchain key to view AI-powered insights and generate reports.
+            <h2 style="margin-bottom: 12px; color: #e0e7ff; font-size: 1.8rem; text-align: center; text-shadow: 0 2px 10px rgba(139, 92, 246, 0.3);">
+                🧠 Access Intelligence Dashboard
+            </h2>
+            <p style="color: #c7d2fe; margin-bottom: 25px; font-size: 0.95rem; text-align: center; line-height: 1.5;">
+                Enter your blockchain key to unlock AI-powered insights,<br>advanced analytics, and comprehensive reports.
             </p>
             
             <div class="input-group">
-                <label for="blockchainKey">Blockchain Key:</label>
+                <label for="blockchainKey">🔐 Blockchain Key</label>
                 <input 
                     type="text" 
                     id="blockchainKey" 
-                    placeholder="xxxxxxxx-xxxxxxxx-xxxxxxxx-xxxxxxxx-..."
+                    placeholder="Enter your secure access key..."
                     autocomplete="off"
                 >
             </div>
             
-            <button class="btn" onclick="loadIntelligenceDashboard()">Access Dashboard</button>
+            <button class="btn" onclick="loadIntelligenceDashboard()">
+                <span style="position: relative; z-index: 1;">🚀 Access Dashboard</span>
+            </button>
             
-            <div id="loginError" style="margin-top: 20px;"></div>
+            <div id="loginError" style="margin-top: 15px;"></div>
             
-            <div style="margin-top: 25px; padding-top: 20px; border-top: 2px solid #e2e8f0; text-align: center;">
-                <p style="color: #64748b; font-size: 0.9rem;">
-                    <span style="color: #3b82f6;"><strong>Quick Test:</strong> Use key <code style="background: #f0f9ff; padding: 3px 8px; border-radius: 5px; border: 1px solid #bfdbfe;">1234</code> for admin/demo access</span>
+            <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(139, 92, 246, 0.3); text-align: center;">
+                <p style="color: #a5b4fc; font-size: 0.85rem; margin-bottom: 10px;">
+                    <span style="color: #c7d2fe;">✨ <strong>Quick Test:</strong></span> Use key 
+                    <code style="background: rgba(139, 92, 246, 0.25); padding: 4px 10px; border-radius: 8px; border: 1px solid rgba(139, 92, 246, 0.5); font-size: 0.9rem; color: #e0e7ff; font-weight: 700;">1234</code> 
+                    for instant demo access
                 </p>
-                <p style="color: #64748b; font-size: 0.9rem; margin-top: 10px;">
-                    New to LimitX? <a href="/" style="color: #3b82f6; text-decoration: none; font-weight: 600;">Use Classic Dashboard</a>
+                <p style="color: #a5b4fc; font-size: 0.85rem; margin-top: 12px;">
+                    New to LimitX? <a href="/" style="color: #8b5cf6; text-decoration: none; font-weight: 700; transition: color 0.3s;" onmouseover="this.style.color='#a78bfa'" onmouseout="this.style.color='#8b5cf6'">← Use Classic Dashboard</a>
                 </p>
             </div>
         </div>
@@ -501,9 +588,9 @@
                         AI-powered sentiment analysis of your child's digital behavior patterns
                     </p>
                     <div style="background: #f8fafc; padding: 20px; border-radius: 10px;">
-                        <div style="font-size: 3rem; font-weight: bold; color: #3b82f6; text-align: center;" id="sentimentScore">0.00</div>
+                        <div style="font-size: 3rem; font-weight: bold; color: #3b82f6; text-align: center;" id="sentimentScore">0/100</div>
                         <div style="text-align: center; color: #64748b; margin-top: 10px;">
-                            Score ranges from -1.0 (concerning) to +1.0 (healthy)
+                            Score ranges from 0 (critical) to 100 (excellent)
                         </div>
                     </div>
                 </div>
@@ -518,8 +605,8 @@
                     
                     <div class="stat-card">
                         <h3>Weekly Screen Time</h3>
-                        <div class="value" id="weeklyScreenTime">0</div>
-                        <div class="label">minutes average</div>
+                        <div class="value" id="weeklyScreenTime">0h 0m</div>
+                        <div class="label">daily average</div>
                     </div>
                     
                     <div class="stat-card">
@@ -539,9 +626,8 @@
             <!-- Analytics Tab -->
             <div id="tab-analytics" class="tab-content">
                 <div class="section">
-                    <h2>📈 Behavioral Analytics</h2>
-                    <p style="color: #64748b; margin-bottom: 25px;">
-                        Visual insights into your child's digital activity patterns
+                    <p style="color: #a5b4fc; margin-bottom: 30px; font-size: 1.05rem; text-align: center; line-height: 1.6;">
+                        📊 Comprehensive visual analysis of digital activity patterns, app usage trends, and behavioral insights
                     </p>
                     
                     <div class="charts-grid">
@@ -585,43 +671,51 @@
             <!-- Policy Tab -->
             <div id="tab-policy" class="tab-content">
                 <div class="section">
-                    <h2>⚙️ Screen Time Policy</h2>
+                    <button class="btn secondary" onclick="loadRecommendedPolicy()" style="width: 100%; max-width: 100%; background: rgba(139, 92, 246, 0.2); color: #c7d2fe; border: 2px solid #8b5cf6; font-size: 1.1rem; padding: 18px; margin-bottom: 30px;">💡 Load AI Recommendations</button>
                     
-                    <div style="margin-bottom: 20px;">
-                        <button class="btn secondary" onclick="loadRecommendedPolicy()">💡 Load AI Recommendations</button>
-                    </div>
-                    
-                    <div class="policy-editor">
-                        <h3 style="margin-bottom: 20px; color: #0c4a6e;">Current Policy Settings</h3>
+                    <div class="policy-editor" style="background: #f8fafc; padding: 40px; border-radius: 15px; border: 1px solid #e2e8f0;">
+                        <h2 style="margin-bottom: 35px; color: #0c4a6e; font-size: 1.8rem; font-weight: 700;">Current Policy Settings</h2>
                         
-                        <div class="policy-row">
-                            <label>Daily Screen Time Limit:</label>
-                            <input type="number" id="policyDailyLimit" value="120" min="0" max="480">
-                            <span style="color: #64748b;">minutes</span>
+                        <div class="policy-row" style="margin-bottom: 25px;">
+                            <label style="font-size: 1.1rem; color: #475569; font-weight: 600; min-width: 240px;">Daily Screen Time Limit:</label>
+                            <div style="display: flex; gap: 10px; flex: 1; align-items: center;">
+                                <input type="number" id="policyDailyHours" value="2" min="0" max="8" placeholder="Hours" style="flex: 1; padding: 16px 20px; font-size: 1.05rem; border: 2px solid #cbd5e1; border-radius: 8px; background: white;">
+                                <span style="color: #64748b; font-size: 1.05rem;">hours</span>
+                                <input type="number" id="policyDailyMinutes" value="0" min="0" max="59" placeholder="Minutes" style="flex: 1; padding: 16px 20px; font-size: 1.05rem; border: 2px solid #cbd5e1; border-radius: 8px; background: white;">
+                                <span style="color: #64748b; font-size: 1.05rem;">minutes</span>
+                            </div>
                         </div>
                         
-                        <div class="policy-row">
-                            <label>Weekend Limit:</label>
-                            <input type="number" id="policyWeekendLimit" value="180" min="0" max="600">
-                            <span style="color: #64748b;">minutes</span>
+                        <div class="policy-row" style="margin-bottom: 25px;">
+                            <label style="font-size: 1.1rem; color: #475569; font-weight: 600; min-width: 240px;">Weekend Limit:</label>
+                            <div style="display: flex; gap: 10px; flex: 1; align-items: center;">
+                                <input type="number" id="policyWeekendDays" value="0" min="0" max="2" placeholder="Days" style="flex: 1; padding: 16px 20px; font-size: 1.05rem; border: 2px solid #cbd5e1; border-radius: 8px; background: white;">
+                                <span style="color: #64748b; font-size: 1.05rem;">days</span>
+                                <input type="number" id="policyWeekendHours" value="3" min="0" max="24" placeholder="Hours" style="flex: 1; padding: 16px 20px; font-size: 1.05rem; border: 2px solid #cbd5e1; border-radius: 8px; background: white;">
+                                <span style="color: #64748b; font-size: 1.05rem;">hours</span>
+                                <input type="number" id="policyWeekendMinutes" value="0" min="0" max="59" placeholder="Minutes" style="flex: 1; padding: 16px 20px; font-size: 1.05rem; border: 2px solid #cbd5e1; border-radius: 8px; background: white;">
+                                <span style="color: #64748b; font-size: 1.05rem;">minutes</span>
+                            </div>
                         </div>
                         
-                        <div class="policy-row">
-                            <label>Bedtime Hour:</label>
-                            <input type="time" id="policyBedtime" value="21:30">
+                        <div class="policy-row" style="margin-bottom: 25px;">
+                            <label style="font-size: 1.1rem; color: #475569; font-weight: 600; min-width: 240px;">Bedtime Hour:</label>
+                            <input type="time" id="policyBedtime" value="21:30" style="flex: 1; padding: 16px 20px; font-size: 1.05rem; border: 2px solid #cbd5e1; border-radius: 8px; background: white;">
+                            <span style="opacity: 0; margin-left: 15px; min-width: 80px;"></span>
                         </div>
                         
-                        <div class="policy-row">
-                            <label>Auto-Apply Policy:</label>
-                            <input type="checkbox" id="policyAutoApply" checked style="flex: none; width: auto;">
+                        <div class="policy-row" style="margin-bottom: 35px;">
+                            <label style="font-size: 1.1rem; color: #475569; font-weight: 600; min-width: 240px;">Auto-Apply Policy:</label>
+                            <input type="checkbox" id="policyAutoApply" checked style="flex: none; width: 24px; height: 24px; cursor: pointer; accent-color: #3b82f6;">
+                            <span style="opacity: 0; margin-left: 15px; min-width: 80px;"></span>
                         </div>
                         
-                        <div class="btn-group">
-                            <button class="btn success" onclick="savePolicy()">💾 Save Policy</button>
-                            <button class="btn secondary" onclick="simulatePolicy()">🔮 Simulate Impact</button>
+                        <div class="btn-group" style="gap: 20px;">
+                            <button class="btn success" onclick="savePolicy()" style="flex: 1; padding: 18px; font-size: 1.1rem; background: #059669; border: none; box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);">💾 Save Policy</button>
+                            <button class="btn secondary" onclick="simulatePolicy()" style="flex: 1; padding: 18px; font-size: 1.1rem; background: rgba(59, 130, 246, 0.15); color: #1e40af; border: 2px solid #3b82f6;">🔮 Simulate Impact</button>
                         </div>
                         
-                        <div id="policyResult" style="margin-top: 20px;"></div>
+                        <div id="policyResult" style="margin-top: 25px;"></div>
                     </div>
                 </div>
             </div>
@@ -727,20 +821,46 @@
             const behavioral = intelligenceData.behavioralData || {};
             const emotionalTone = behavioral.emotionalTone || {};
             
-            // Update sentiment score
-            const sentiment = emotionalTone.overallSentiment || 0;
-            document.getElementById('sentimentScore').textContent = sentiment.toFixed(2);
+            // Update wellness score (0-100 scale)
+            const wellnessScore = emotionalTone.overallSentiment || 50;
+            document.getElementById('sentimentScore').textContent = wellnessScore.toFixed(0) + '/100';
             
             const badge = document.getElementById('sentimentBadge');
-            if (sentiment > 0.3) {
-                badge.textContent = 'Positive & Healthy';
+            // Update badge color and text based on 0-100 scale
+            if (wellnessScore >= 80) {
+                badge.textContent = '🌟 Excellent';
                 badge.className = 'sentiment-badge sentiment-positive';
-            } else if (sentiment < -0.3) {
-                badge.textContent = 'Needs Attention';
-                badge.className = 'sentiment-badge sentiment-concerning';
-            } else {
-                badge.textContent = 'Neutral';
+                badge.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+            } else if (wellnessScore >= 60) {
+                badge.textContent = '👍 Good';
+                badge.className = 'sentiment-badge sentiment-positive';
+                badge.style.background = 'linear-gradient(135deg, #3b82f6, #2563eb)';
+            } else if (wellnessScore >= 40) {
+                badge.textContent = '⚖️ Moderate';
                 badge.className = 'sentiment-badge sentiment-neutral';
+                badge.style.background = 'linear-gradient(135deg, #f59e0b, #d97706)';
+            } else if (wellnessScore >= 20) {
+                badge.textContent = '⚠️ Concerning';
+                badge.className = 'sentiment-badge sentiment-concerning';
+                badge.style.background = 'linear-gradient(135deg, #f97316, #ea580c)';
+            } else {
+                badge.textContent = '🚨 Critical';
+                badge.className = 'sentiment-badge sentiment-concerning';
+                badge.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+            }
+            
+            // Update score display color dynamically
+            const scoreElement = document.getElementById('sentimentScore');
+            if (wellnessScore >= 80) {
+                scoreElement.style.color = '#10b981';
+            } else if (wellnessScore >= 60) {
+                scoreElement.style.color = '#3b82f6';
+            } else if (wellnessScore >= 40) {
+                scoreElement.style.color = '#f59e0b';
+            } else if (wellnessScore >= 20) {
+                scoreElement.style.color = '#f97316';
+            } else {
+                scoreElement.style.color = '#ef4444';
             }
             
             // Update stats
@@ -751,7 +871,21 @@
             }
             
             const screenTime = behavioral.screenTimeData || {};
-            document.getElementById('weeklyScreenTime').textContent = screenTime.weeklyAverage || 0;
+            const avgMinutes = screenTime.weeklyAverage || 0;
+            const hours = Math.floor(avgMinutes / 60);
+            const minutes = Math.floor(avgMinutes % 60);
+            
+            // Update the display
+            const weeklyTimeElement = document.getElementById('weeklyScreenTime');
+            if (avgMinutes > 0) {
+                weeklyTimeElement.textContent = `${hours}h ${minutes}m`;
+                weeklyTimeElement.style.color = '#3b82f6';
+            } else {
+                weeklyTimeElement.textContent = '0h 0m';
+                weeklyTimeElement.style.color = '#94a3b8';
+            }
+            
+            console.log('Weekly Average Minutes:', avgMinutes, 'Hours:', hours, 'Minutes:', minutes);
             
             const blocked = behavioral.blockedNSFWAttempts || [];
             document.getElementById('blockedCount').textContent = blocked.length;
@@ -772,7 +906,12 @@
         }
         
         async function loadAllCharts() {
-            const chartTypes = ['top_apps', 'screen_time', 'keyword_sentiment', 'blocked_attempts'];
+            const chartTypes = [
+                'top_apps', 
+                'screen_time', 
+                'keyword_sentiment', 
+                'blocked_attempts'
+            ];
             
             for (const type of chartTypes) {
                 try {
@@ -814,16 +953,51 @@
                 charts[type].destroy();
             }
             
+            // Enhanced chart creation with merged options
+            // Some chart options (callbacks) are serialized as strings by the backend.
+            // Revive simple arrow/function strings into real JS functions before creating the chart.
+            function reviveFunctions(obj) {
+                if (!obj || typeof obj !== 'object') return obj;
+                for (const k of Object.keys(obj)) {
+                    const v = obj[k];
+                    if (typeof v === 'string') {
+                        const s = v.trim();
+                        // Heuristic: treat strings that look like functions or arrow funcs as code
+                        if ((s.startsWith('(') && s.includes('=>')) || s.startsWith('function') || s.includes('=>')) {
+                            try {
+                                // eslint-disable-next-line no-eval
+                                obj[k] = eval(s);
+                            } catch (e) {
+                                // leave as-is if eval fails
+                            }
+                        }
+                    } else if (typeof v === 'object') {
+                        reviveFunctions(v);
+                    }
+                }
+                return obj;
+            }
+
+            const optionsFromServer = data.options || {};
+            // Deep copy to avoid mutating original
+            const options = JSON.parse(JSON.stringify(optionsFromServer));
+            // Revive any function-like strings
+            reviveFunctions(options);
+
+            // Ensure plugins exist and force legend display unless server disables it
+            options.plugins = options.plugins || {};
+            options.plugins.legend = options.plugins.legend || {display: true};
+
             charts[type] = new Chart(ctx, {
                 type: data.type,
                 data: {
                     labels: data.labels,
                     datasets: data.datasets
                 },
-                options: data.options || {
+                options: Object.assign({}, options, {
                     responsive: true,
                     maintainAspectRatio: true
-                }
+                })
             });
         }
         
@@ -920,8 +1094,49 @@
             document.getElementById('reportContent').innerHTML = html;
         }
         
-        function downloadReport(type) {
-            window.location.href = `/api/report/download/${currentKey}?type=${type}`;
+        async function downloadReport(type) {
+            try {
+                // First, check if report exists, if not generate it
+                if (!intelligenceData.syntheticReport?.reportId) {
+                    // Show generating message
+                    const resultDiv = document.getElementById('policyResult');
+                    resultDiv.innerHTML = `<div class="alert alert-info" style="background: #e0f2fe; border-left: 4px solid #0284c7; padding: 15px; border-radius: 8px;">
+                        <p>🤖 Generating AI report... This may take a moment.</p>
+                    </div>`;
+                    
+                    // Generate the report
+                    const generateResponse = await fetch(`/api/report/generate/${currentKey}?type=${type}`, {
+                        method: 'POST'
+                    });
+                    
+                    if (!generateResponse.ok) {
+                        const error = await generateResponse.json();
+                        throw new Error(error.error || 'Failed to generate report');
+                    }
+                    
+                    const result = await generateResponse.json();
+                    
+                    // Update intelligence data with the new report
+                    intelligenceData.syntheticReport = result;
+                    
+                    resultDiv.innerHTML = `<div class="alert alert-info" style="background: #d1fae5; border-left: 4px solid #10b981; padding: 15px; border-radius: 8px;">
+                        <p>✅ Report generated successfully! Downloading now...</p>
+                    </div>`;
+                    
+                    // Wait a moment before downloading
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                }
+                
+                // Now download the report
+                window.location.href = `/api/report/download/${currentKey}?type=${type}`;
+                
+            } catch (error) {
+                console.error('Error downloading report:', error);
+                const resultDiv = document.getElementById('policyResult');
+                resultDiv.innerHTML = `<div class="alert alert-error" style="background: #fee2e2; border-left: 4px solid #ef4444; padding: 15px; border-radius: 8px;">
+                    <p>❌ Error: ${error.message}</p>
+                </div>`;
+            }
         }
         
         async function loadRecommendedPolicy() {
@@ -931,19 +1146,33 @@
             }
             
             const policy = intelligenceData.syntheticReport.screenTimePolicy;
+            const dailyLimit = policy.recommendedDailyLimit || 120;
+            const weekendLimit = policy.weekendLimit || 180;
             
-            document.getElementById('policyDailyLimit').value = policy.recommendedDailyLimit || 120;
-            document.getElementById('policyWeekendLimit').value = policy.weekendLimit || 180;
+            document.getElementById('policyDailyHours').value = Math.floor(dailyLimit / 60);
+            document.getElementById('policyDailyMinutes').value = dailyLimit % 60;
+            
+            const weekendDays = Math.floor(weekendLimit / 1440);
+            const remainingMins = weekendLimit % 1440;
+            document.getElementById('policyWeekendDays').value = weekendDays;
+            document.getElementById('policyWeekendHours').value = Math.floor(remainingMins / 60);
+            document.getElementById('policyWeekendMinutes').value = remainingMins % 60;
             document.getElementById('policyBedtime').value = policy.suggestedBedtime || '21:30';
             
             document.getElementById('policyResult').innerHTML = 
-                `<div class="alert alert-info">💡 ${policy.reasoning || 'AI-recommended policy loaded'}</div>`;
+                `<div class="alert alert-info" style="background: #e0f2fe; border-left: 4px solid #0284c7; padding: 15px; border-radius: 8px;">💡 ${policy.reasoning || 'AI-recommended policy loaded successfully'}</div>`;
         }
         
         async function savePolicy() {
+            const dailyHours = parseInt(document.getElementById('policyDailyHours').value) || 0;
+            const dailyMinutes = parseInt(document.getElementById('policyDailyMinutes').value) || 0;
+            const weekendDays = parseInt(document.getElementById('policyWeekendDays').value) || 0;
+            const weekendHours = parseInt(document.getElementById('policyWeekendHours').value) || 0;
+            const weekendMinutes = parseInt(document.getElementById('policyWeekendMinutes').value) || 0;
+            
             const policy = {
-                dailyLimitMinutes: parseInt(document.getElementById('policyDailyLimit').value),
-                weekendLimitMinutes: parseInt(document.getElementById('policyWeekendLimit').value),
+                dailyLimitMinutes: (dailyHours * 60) + dailyMinutes,
+                weekendLimitMinutes: (weekendDays * 1440) + (weekendHours * 60) + weekendMinutes,
                 bedtimeHour: document.getElementById('policyBedtime').value,
                 autoApply: document.getElementById('policyAutoApply').checked
             };
@@ -967,22 +1196,75 @@
         }
         
         function simulatePolicy() {
-            const daily = parseInt(document.getElementById('policyDailyLimit').value);
+            const dailyHours = parseInt(document.getElementById('policyDailyHours').value) || 0;
+            const dailyMinutes = parseInt(document.getElementById('policyDailyMinutes').value) || 0;
+            const daily = (dailyHours * 60) + dailyMinutes;
+            
             const current = intelligenceData.behavioralData?.screenTimeData?.weeklyAverage || 0;
             
-            const reduction = ((current - daily) / current * 100).toFixed(1);
+            console.log('🔮 Simulation Data:', {
+                currentMinutes: current,
+                proposedMinutes: daily,
+                weeklyScreenTimeElement: document.getElementById('weeklyScreenTime').textContent,
+                screenTimeData: intelligenceData.behavioralData?.screenTimeData
+            });
             
-            let message = `<p><strong>Policy Impact Simulation:</strong></p>`;
+            const dailyHoursDisplay = Math.floor(daily / 60);
+            const dailyMinsDisplay = Math.floor(daily % 60);
+            const currentHours = Math.floor(current / 60);
+            const currentMins = Math.floor(current % 60);
             
-            if (reduction > 0) {
-                message += `<p>✅ This policy would reduce screen time by approximately <strong>${reduction}%</strong></p>`;
-                message += `<p>💡 Estimated new daily average: <strong>${daily} minutes</strong></p>`;
+            let message = `<p><strong>📊 Policy Impact Simulation:</strong></p>`;
+            message += `<p style="color: #64748b;">Current daily average: <strong>${currentHours}h ${currentMins}m</strong> (${current} minutes)</p>`;
+            message += `<p style="color: #64748b;">Proposed limit: <strong>${dailyHoursDisplay}h ${dailyMinsDisplay}m</strong> (${daily} minutes)</p>`;
+            message += `<hr style="border: none; border-top: 1px solid #e2e8f0; margin: 15px 0;">`;
+            
+            if (current === 0) {
+                // No current usage data
+                message += `<p style="color: #3b82f6;">ℹ️ <strong>Setting Initial Policy</strong></p>`;
+                message += `<p>No usage data available yet. This will be your baseline limit.</p>`;
+                message += `<p>💡 Recommended screen time limits:</p>`;
+                message += `<ul style="margin-left: 20px; color: #64748b;">`;
+                message += `<li>Ages 6-12: 1-2 hours daily</li>`;
+                message += `<li>Ages 13-17: 2-3 hours daily</li>`;
+                message += `<li>Adults: Self-determined based on goals</li>`;
+                message += `</ul>`;
+                message += `<p>Your proposed limit: <strong>${dailyHoursDisplay}h ${dailyMinsDisplay}m</strong> will be enforced once usage begins.</p>`;
+            } else if (current > daily) {
+                const reduction = ((current - daily) / current * 100).toFixed(1);
+                const savedMins = current - daily;
+                const savedHours = Math.floor(savedMins / 60);
+                const savedMinutes = Math.floor(savedMins % 60);
+                
+                message += `<p style="color: #10b981;">✅ <strong>Positive Impact!</strong></p>`;
+                message += `<p>• Screen time reduction: <strong>${reduction}%</strong></p>`;
+                message += `<p>• Time saved daily: <strong>${savedHours}h ${savedMinutes}m</strong></p>`;
+                message += `<p>• New daily average: <strong>${dailyHoursDisplay}h ${dailyMinsDisplay}m</strong></p>`;
+                message += `<p style="margin-top: 10px; color: #64748b;">💡 This reduction will promote healthier digital habits.</p>`;
+            } else if (current < daily) {
+                // If current usage is very low (under 30 minutes), treat as baseline setting
+                if (current < 30) {
+                    message += `<p style="color: #3b82f6;">✓ <strong>Setting Baseline Policy</strong></p>`;
+                    message += `<p>Current usage is minimal (<strong>${currentHours}h ${currentMins}m</strong>).</p>`;
+                    message += `<p>Your proposed limit of <strong>${dailyHoursDisplay}h ${dailyMinsDisplay}m</strong> provides a healthy boundary for future usage.</p>`;
+                    message += `<p style="margin-top: 10px; color: #64748b;">💡 This will help establish good digital habits from the start.</p>`;
+                } else {
+                    const extraMins = daily - current;
+                    const extraHours = Math.floor(extraMins / 60);
+                    const extraMinutes = Math.floor(extraMins % 60);
+                    
+                    message += `<p style="color: #f59e0b;">⚠️ <strong>Higher Than Current Usage</strong></p>`;
+                    message += `<p>• Additional time allowed: <strong>${extraHours}h ${extraMinutes}m</strong></p>`;
+                    message += `<p style="margin-top: 10px; color: #64748b;">💡 Current average (<strong>${currentHours}h ${currentMins}m</strong>) suggests healthy habits. Consider maintaining this level.</p>`;
+                }
             } else {
-                message += `<p>⚠️ Current usage is below the proposed limit. Consider maintaining or slightly reducing.</p>`;
+                message += `<p style="color: #3b82f6;">✓ <strong>Perfect Match!</strong></p>`;
+                message += `<p>The proposed limit matches current usage patterns.</p>`;
+                message += `<p>💡 This will maintain current screen time levels.</p>`;
             }
             
             document.getElementById('policyResult').innerHTML = 
-                `<div class="alert alert-info">${message}</div>`;
+                `<div class="alert alert-info" style="background: #f8fafc; border-left: 4px solid #3b82f6; padding: 20px; border-radius: 8px; margin-top: 20px;">${message}</div>`;
         }
         
         function logout() {

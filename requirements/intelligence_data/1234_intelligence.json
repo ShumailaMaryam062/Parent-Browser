@@ -3,7 +3,7 @@
     "childId": "child_001",
     "deviceKey": "1234",
     "profileCreated": "2025-11-08T18:20:05.794291",
-    "lastUpdated": "2025-11-08T18:20:21.662077"
+    "lastUpdated": "2025-11-08T22:06:41.932072"
   },
   "behavioralData": {
     "mostUsedApps": [
@@ -11,13 +11,13 @@
         "appName": "Chrome Browser",
         "usageCount": 2,
         "categoryType": "browser",
-        "lastUsed": "2025-11-08T18:20:21.662077"
+        "lastUsed": "2025-11-08T22:06:41.932072"
       },
       {
         "appName": "YouTube",
         "usageCount": 1,
         "categoryType": "browser",
-        "lastUsed": "2025-11-08T18:20:21.662077"
+        "lastUsed": "2025-11-08T22:06:41.932072"
       }
     ],
     "searchedKeywords": [
@@ -26,21 +26,21 @@
         "frequency": 1,
         "sentiment": 0,
         "category": "neutral",
-        "timestamp": "2025-11-08T18:20:21.662077"
+        "timestamp": "2025-11-08T22:06:41.932072"
       },
       {
         "keyword": "educational videos",
         "frequency": 1,
         "sentiment": 0,
         "category": "neutral",
-        "timestamp": "2025-11-08T18:20:21.662077"
+        "timestamp": "2025-11-08T22:06:41.932072"
       },
       {
         "keyword": "math tutorials",
         "frequency": 1,
         "sentiment": 0,
         "category": "neutral",
-        "timestamp": "2025-11-08T18:20:21.662077"
+        "timestamp": "2025-11-08T22:06:41.932072"
       }
     ],
     "blockedNSFWAttempts": [
@@ -66,19 +66,19 @@
     "screenTimeData": {
       "dailyScreenTime": [
         {
-          "date": "",
-          "minutes": 0,
+          "date": "2024-11-08",
+          "minutes": 6,
           "peakHours": []
         }
       ],
-      "weeklyAverage": 0,
+      "weeklyAverage": 6,
       "bedtimeActivity": {
         "lateNightSessions": 0,
         "avgSleepTime": "22:00"
       }
     },
     "emotionalTone": {
-      "overallSentiment": 0.0,
+      "overallSentiment": 50.0,
       "trendingPositive": [],
       "trendingRisky": [],
       "neutralPatterns": [
@@ -93,49 +93,152 @@
     "screenTimeTrend": "charts/1234_screen_time.json",
     "blockedAttemptsScatter": "charts/1234_blocked_attempts.json",
     "keywordPieChart": "charts/1234_keyword_sentiment.json",
-    "sleepTimeHeatmap": "charts/1234_sleep_heatmap.json"
+    "sleepTimeHeatmap": "charts/1234_sleep_heatmap.json",
+    "humanActivityPattern": "charts/1234_human_activity.json"
   },
   "conversationStarters": [
     {
       "id": 1,
       "type": "positive",
-      "title": "Favorite Application",
-      "message": "Your child frequently uses Chrome Browser. This could be a great conversation starter!",
-      "actionSuggestion": "Ask them what they like most about Chrome Browser and if they've discovered anything interesting."
+      "icon": "\u2b50",
+      "title": "Exploring Together: Chrome Browser",
+      "message": "Chrome Browser has captured their attention (2 times). Let's explore why!",
+      "actionSuggestion": "Say: 'I'd love to understand Chrome Browser better. Could you give me a quick tour of what you do there?'",
+      "deeperQuestions": [
+        "What's your favorite feature and why?",
+        "If you could change one thing about it, what would it be?",
+        "Are there other apps or activities you'd like to explore?"
+      ]
+    },
+    {
+      "id": 2,
+      "type": "positive",
+      "icon": "\ud83d\udd0d",
+      "title": "Curiosity Mapping",
+      "message": "Their recent searches include: \"science homework, educational videos, math tutorials\" - their mind is actively exploring!",
+      "actionSuggestion": "Ask: 'I saw you were curious about science homework. What sparked that interest? Want to dive deeper together?'",
+      "deeperQuestions": [
+        "What questions are you trying to answer?",
+        "Have you found anything surprising or confusing?",
+        "Would you like help finding more resources about this?"
+      ],
+      "enrichmentIdeas": [
+        "Visit library for books on science homework",
+        "Watch documentaries together on related topics",
+        "Start a curiosity journal to track discoveries"
+      ]
+    },
+    {
+      "id": 3,
+      "type": "concern",
+      "icon": "\u2696\ufe0f",
+      "title": "Finding Balance Together",
+      "message": "Wellness score (50.0/100) suggests room for improvement. Let's collaborate on balance.",
+      "actionSuggestion": "Open dialogue: 'I want to understand your relationship with screens. How do you feel after using devices?'",
+      "deeperQuestions": [
+        "Do you ever feel like screen time takes away from other things you enjoy?",
+        "What would a 'balanced day' look like to you?",
+        "What boundaries might help you feel better?"
+      ]
+    },
+    {
+      "id": 4,
+      "type": "positive",
+      "icon": "\ud83c\udfc6",
+      "title": "Healthy Screen Habits!",
+      "message": "Only 1 minutes/day - excellent balance! They're prioritizing offline life.",
+      "actionSuggestion": "Affirm: 'I notice you use screens mindfully and make time for other activities. What helps you maintain this balance?'",
+      "deeperQuestions": [
+        "What offline activities bring you the most joy?",
+        "How do you decide what deserves your screen time?",
+        "What advice would you give other kids about screens?"
+      ]
     }
   ],
   "syntheticReport": {
-    "generatedAt": "2025-11-08T18:21:17.713574",
-    "reportId": "RPT-20251108-182117",
-    "executiveSummary": "Digital activity report based on 3 searches and 2 applications used.",
+    "executiveSummary": "Analysis based on 2 applications and 3 search queries reveals a digital behavior pattern with wellness score of 50.0/100. The child shows engagement with Chrome Browser, YouTube and demonstrates stable behavioral trends.",
     "keyFindings": [
-      "Most used applications: Chrome Browser, YouTube",
-      "Average weekly screen time: 0 minutes",
-      "Blocked attempts: 3"
+      "Screen Time: 6 minutes weekly average",
+      "Application Portfolio: 2 unique applications accessed",
+      "Search Activity: 3 distinct search queries recorded",
+      "Wellness Metric: 50.0/100 indicating moderate concern level",
+      "Trend Direction: Stable behavioral patterns observed"
     ],
     "emotionalTrends": {
-      "sentimentScore": 0.0,
-      "interpretation": "Monitoring data collected successfully.",
-      "trendDirection": "stable"
+      "interpretation": "Digital behavior wellness score of 50.0/100 suggests stable emotional patterns with moderate level of concern requiring parental awareness.",
+      "trendDirection": "stable",
+      "concernLevel": "moderate",
+      "wellnessScore": 50.0,
+      "strengths": [
+        "Consistent digital engagement",
+        "Varied application usage"
+      ],
+      "areasForGrowth": [
+        "Screen time management",
+        "Content diversity"
+      ]
     },
     "positiveHabits": [
-      "Regular usage patterns",
-      "Respecting time limits"
+      "Regular engagement with educational/creative content",
+      "Diverse application usage patterns",
+      "Consistent daily routine establishment",
+      "Active digital exploration and learning"
     ],
     "possibleConcerns": [
-      "Continue monitoring for changes"
+      "Screen time monitoring recommended - 6 minutes weekly",
+      "3 blocked access attempts require discussion"
     ],
-    "guidanceForParents": "Continue open communication with your child about their digital activities. Review usage patterns regularly and adjust limits as needed.",
+    "developmentalInsights": {
+      "cognitiveGrowth": "Demonstrates curiosity through varied search queries and application exploration",
+      "socialDevelopment": "Digital interaction patterns suggest age-appropriate social engagement",
+      "emotionalMaturity": "Wellness score of 50.0/100 indicates moderate emotional regulation",
+      "digitalLiteracy": "Developing healthy navigation skills across digital platforms"
+    },
+    "guidanceForParents": "Your child's digital wellness score of 50.0/100 reflects moderate areas for parental guidance. Approach conversations with curiosity rather than judgment. Start by acknowledging their interests in Chrome Browser, YouTube, then collaboratively set boundaries. Create 'tech-free zones' for family connection (meals, bedtime). Use the 3 C's: Connection (understand their digital world), Collaboration (set limits together), Consistency (enforce agreed boundaries lovingly). Remember: your goal is digital wellness, not digital perfection.",
     "screenTimePolicy": {
       "recommendedDailyLimit": 120,
       "weekendLimit": 180,
       "suggestedBedtime": "21:30",
-      "reasoning": "Standard recommendations for healthy digital habits"
+      "reasoning": "Based on 6 minutes weekly average and developmental best practices",
+      "flexibilityFactors": [
+        "Academic projects",
+        "Creative pursuits",
+        "Social connection needs"
+      ],
+      "adjustmentTriggers": [
+        "Improved self-regulation",
+        "Academic performance changes",
+        "Behavioral shifts"
+      ]
     },
     "conversationStarters": [
-      "What did you learn online this week?",
-      "Is there anything interesting you'd like to share?"
-    ]
+      "I noticed you've been exploring Chrome Browser - what do you find most interesting about it?",
+      "If you could design your ideal app, what would it do and why?",
+      "What's something you learned online this week that surprised you?",
+      "I see you're curious about science homework - want to explore that together?",
+      "What's one thing you wish adults understood better about being online?"
+    ],
+    "actionPlan": {
+      "immediate": [
+        "Schedule 30-minute 'digital wellness' conversation",
+        "Review current screen time together"
+      ],
+      "shortTerm": [
+        "Establish collaborative tech boundaries",
+        "Identify 2-3 screen-free family activities"
+      ],
+      "longTerm": [
+        "Build digital literacy skills",
+        "Foster open communication about online experiences"
+      ]
+    },
+    "resources": [
+      "Common Sense Media - Age-appropriate content guides",
+      "Screen Time Action Network - Family media plans",
+      "Digital Wellness Lab - Parent resources"
+    ],
+    "generatedAt": "2025-11-08T22:06:46.030265",
+    "reportId": "RPT-FALLBACK-20251108-220646"
   },
   "policySettings": {
     "currentPolicy": {
@@ -158,13 +261,103 @@
           "autoApply": true
         },
         "changedAt": "2025-11-08T18:27:10.091972"
+      },
+      {
+        "policy": {
+          "dailyLimitMinutes": 120,
+          "weekendLimitMinutes": 180,
+          "bedtimeHour": "21:30",
+          "autoApply": true
+        },
+        "changedAt": "2025-11-08T19:14:38.499601"
+      },
+      {
+        "policy": {
+          "dailyLimitMinutes": 120,
+          "weekendLimitMinutes": 180,
+          "bedtimeHour": "21:30",
+          "autoApply": true
+        },
+        "changedAt": "2025-11-08T20:26:25.730876"
+      },
+      {
+        "policy": {
+          "dailyLimitMinutes": 120,
+          "weekendLimitMinutes": 180,
+          "bedtimeHour": "21:30",
+          "autoApply": true
+        },
+        "changedAt": "2025-11-08T20:26:59.584505"
+      },
+      {
+        "policy": {
+          "dailyLimitMinutes": 120,
+          "weekendLimitMinutes": 180,
+          "bedtimeHour": "21:30",
+          "autoApply": true
+        },
+        "changedAt": "2025-11-08T21:26:03.044302"
+      },
+      {
+        "policy": {
+          "dailyLimitMinutes": 120,
+          "weekendLimitMinutes": 180,
+          "bedtimeHour": "21:30",
+          "autoApply": true
+        },
+        "changedAt": "2025-11-08T21:36:35.408483"
+      },
+      {
+        "policy": {
+          "dailyLimitMinutes": 120,
+          "weekendLimitMinutes": 180,
+          "bedtimeHour": "21:30",
+          "autoApply": true
+        },
+        "changedAt": "2025-11-08T21:38:14.772980"
+      },
+      {
+        "policy": {
+          "dailyLimitMinutes": 120,
+          "weekendLimitMinutes": 180,
+          "bedtimeHour": "21:30",
+          "autoApply": true
+        },
+        "changedAt": "2025-11-08T21:45:13.330493"
+      },
+      {
+        "policy": {
+          "dailyLimitMinutes": 120,
+          "weekendLimitMinutes": 180,
+          "bedtimeHour": "21:30",
+          "autoApply": true
+        },
+        "changedAt": "2025-11-08T21:46:55.929272"
+      },
+      {
+        "policy": {
+          "dailyLimitMinutes": 120,
+          "weekendLimitMinutes": 180,
+          "bedtimeHour": "21:30",
+          "autoApply": true
+        },
+        "changedAt": "2025-11-08T21:55:41.254892"
+      },
+      {
+        "policy": {
+          "dailyLimitMinutes": 120,
+          "weekendLimitMinutes": 180,
+          "bedtimeHour": "21:30",
+          "autoApply": true
+        },
+        "changedAt": "2025-11-08T22:03:25.949517"
       }
     ],
-    "lastUpdated": "2025-11-08T18:27:10.091972"
+    "lastUpdated": "2025-11-08T22:03:25.949517"
   },
   "metadata": {
     "version": "1.0.0",
-    "lastSync": "2025-11-08T18:20:21.662077",
+    "lastSync": "2025-11-08T22:06:41.932072",
     "totalViolations": 3,
     "integrityVerified": true
   }

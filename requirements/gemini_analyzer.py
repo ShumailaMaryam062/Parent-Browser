@@ -29,40 +29,49 @@ class GeminiAnalyzer:
     def calculate_sentiment_score(self, keywords: List[Dict]) -> float:
         """
         Calculate sentiment score from keywords using Gemini AI.
-        Returns: float between -1 (risky) and +1 (healthy)
+        Returns: float between 0 (very risky) and 100 (very healthy)
         """
         if not keywords:
-            return 0.0
+            return 50.0  # Neutral score
         
         keyword_list = [k.get('keyword', '') for k in keywords[:50]]  # Limit to 50 for API
         
         prompt = f"""
-Analyze these search keywords from a child's browsing history and provide a sentiment score.
-Score Range: -1.0 (very risky/concerning) to +1.0 (very healthy/positive)
+Analyze these search keywords from a child's browsing history and provide a wellness score.
+Score Range: 0 (very risky/concerning) to 100 (very healthy/positive)
 
 Keywords: {', '.join(keyword_list)}
 
 Return ONLY a JSON object with this exact structure:
 {{
-  "sentimentScore": 0.0,
-  "reasoning": "Brief explanation of the score"
+  "wellnessScore": 50.0,
+  "reasoning": "Brief explanation of the score",
+  "riskLevel": "low|medium|high"
 }}
 
+Scoring Guidelines:
+- 80-100: Excellent - Educational, creative, age-appropriate content
+- 60-79: Good - Balanced usage with mostly positive content
+- 40-59: Moderate - Mixed content, needs some guidance
+- 20-39: Concerning - Significant risky or inappropriate content
+- 0-19: Critical - Immediate attention required
+
 Consider:
-- Educational content = positive
-- Age-appropriate entertainment = neutral to positive
-- Violence, adult content, harmful behavior = negative
-- Balanced curiosity = positive
+- Educational/creative content = high score (80-100)
+- Age-appropriate entertainment = good score (60-79)
+- Excessive gaming/social media = moderate score (40-59)
+- Violence, mature content = concerning score (20-39)
+- NSFW, harmful behavior = critical score (0-19)
 """
         
         try:
             response = self.model.generate_content(prompt)
             result = json.loads(response.text.strip())
-            score = float(result.get('sentimentScore', 0.0))
-            return max(-1.0, min(1.0, score))  # Clamp between -1 and 1
+            score = float(result.get('wellnessScore', 50.0))
+            return max(0.0, min(100.0, score))  # Clamp between 0 and 100
         except Exception as e:
             print(f"Sentiment analysis error: {e}")
-            return 0.0
+            return 50.0  # Neutral fallback
     
     def categorize_keywords(self, keywords: List[Dict]) -> Dict[str, List[str]]:
         """
@@ -104,64 +113,97 @@ Return ONLY a JSON object:
         """
         behavioral = intelligence_data.get('behavioralData', {})
         
-        # Prepare summary for Gemini
+        # Prepare detailed summary for Gemini
         summary = {
             "totalApps": len(behavioral.get('mostUsedApps', [])),
             "totalKeywords": len(behavioral.get('searchedKeywords', [])),
             "blockedAttempts": len(behavioral.get('blockedNSFWAttempts', [])),
             "topApps": [app['appName'] for app in behavioral.get('mostUsedApps', [])[:5]],
-            "recentKeywords": [kw['keyword'] for kw in behavioral.get('searchedKeywords', [])[:10]],
+            "recentKeywords": [kw['keyword'] for kw in behavioral.get('searchedKeywords', [])[:15]],
             "screenTimeWeekly": behavioral.get('screenTimeData', {}).get('weeklyAverage', 0),
-            "emotionalTone": behavioral.get('emotionalTone', {}).get('overallSentiment', 0)
+            "emotionalTone": behavioral.get('emotionalTone', {}).get('overallSentiment', 50),
+            "trendingPositive": behavioral.get('emotionalTone', {}).get('trendingPositive', []),
+            "trendingRisky": behavioral.get('emotionalTone', {}).get('trendingRisky', [])
         }
         
         prompt = f"""
-You are a child psychologist and digital wellness expert creating a professional parental control report.
+You are Dr. Sarah Chen, Ph.D. in Child Psychology and Digital Wellness Expert. Create a comprehensive, professional parental control report.
 
-CHILD'S DIGITAL ACTIVITY DATA:
+CHILD'S DIGITAL ACTIVITY ANALYSIS:
 {json.dumps(summary, indent=2)}
 
-Generate a comprehensive, privacy-safe report suitable for parents and school counselors.
+Generate a detailed, unique report with deep insights and actionable guidance.
 
 Return ONLY a JSON object with this structure:
 {{
-  "executiveSummary": "2-3 sentence overview of the child's digital behavior",
+  "executiveSummary": "Comprehensive 4-5 sentence overview analyzing the child's digital behavior patterns, emotional wellness, and developmental trajectory",
   "keyFindings": [
-    "Finding 1: Clear, specific observation",
-    "Finding 2: Another important pattern",
-    "Finding 3: Behavioral trend"
+    "Finding 1: Detailed observation with specific metrics and context",
+    "Finding 2: Pattern analysis with behavioral implications",
+    "Finding 3: Developmental milestone assessment",
+    "Finding 4: Social-emotional indicators from digital behavior",
+    "Finding 5: Risk assessment and protective factors"
   ],
   "emotionalTrends": {{
-    "interpretation": "Detailed analysis of emotional patterns",
-    "trendDirection": "improving|stable|concerning"
+    "interpretation": "Deep psychological analysis of emotional patterns observed through digital behavior, including attachment styles, coping mechanisms, and emotional regulation",
+    "trendDirection": "improving|stable|declining|fluctuating",
+    "concernLevel": "none|minimal|moderate|elevated|critical",
+    "strengths": ["Strength 1", "Strength 2", "Strength 3"],
+    "areasForGrowth": ["Area 1", "Area 2"]
   }},
   "positiveHabits": [
-    "Specific positive behavior 1",
-    "Specific positive behavior 2"
+    "Specific positive behavior with developmental significance",
+    "Another strength-based observation",
+    "Evidence of healthy digital citizenship",
+    "Signs of critical thinking and self-regulation"
   ],
   "possibleConcerns": [
-    "Concern 1 with context",
-    "Concern 2 with context"
+    "Concern 1 with context, severity assessment, and developmental implications",
+    "Concern 2 with environmental factors and potential interventions"
   ],
-  "guidanceForParents": "Warm, actionable guidance paragraph for parents with 3-4 specific suggestions",
+  "developmentalInsights": {{
+    "cognitiveGrowth": "Analysis of learning patterns and intellectual curiosity",
+    "socialDevelopment": "Assessment of social interactions and relationship building",
+    "emotionalMaturity": "Evaluation of emotional intelligence and self-awareness",
+    "digitalLiteracy": "Assessment of responsible technology use"
+  }},
+  "guidanceForParents": "Warm, comprehensive, evidence-based guidance (200-300 words) with specific strategies for supporting the child's digital wellness, including: attachment-based approaches, positive reinforcement techniques, collaborative goal-setting methods, and family systems interventions. Include specific conversation openers and engagement strategies.",
   "screenTimePolicy": {{
     "recommendedDailyLimit": 120,
     "weekendLimit": 180,
     "suggestedBedtime": "21:30",
-    "reasoning": "Why these limits are suggested"
+    "reasoning": "Evidence-based explanation with developmental psychology principles",
+    "flexibilityFactors": ["Factor 1", "Factor 2"],
+    "adjustmentTriggers": ["When to increase limits", "When to decrease limits"]
   }},
   "conversationStarters": [
-    "Gentle question or topic to discuss with child",
-    "Another positive conversation starter"
+    "Deeply thoughtful question that invites authentic sharing",
+    "Open-ended prompt that encourages critical thinking",
+    "Curiosity-driven inquiry about their interests",
+    "Reflective question about their digital experiences",
+    "Future-oriented question about goals and aspirations"
+  ],
+  "actionPlan": {{
+    "immediate": ["Action 1 for this week", "Action 2 for this week"],
+    "shortTerm": ["30-day goal 1", "30-day goal 2"],
+    "longTerm": ["Ongoing practice 1", "Ongoing practice 2"]
+  }},
+  "resources": [
+    "Recommended book/website/app for child's interests",
+    "Family activity suggestion based on trends",
+    "Professional resource if needed"
   ]
 }}
 
-IMPORTANT:
-- Use professional, neutral tone
-- No raw conversations or identifiable data
-- Focus on patterns, not individual incidents
-- Be constructive and supportive
-- Emphasize collaboration over surveillance
+CRITICAL REQUIREMENTS:
+- Use developmental psychology framework
+- Be specific, not generic
+- Focus on strengths-based approach
+- Provide actionable, measurable recommendations
+- Use warm, collaborative tone
+- Reference actual data points
+- Avoid jargon, be parent-friendly
+- Emphasize connection over control
 """
         
         try:
@@ -171,7 +213,10 @@ IMPORTANT:
             # Add metadata
             report['generatedAt'] = datetime.now().isoformat()
             report['reportId'] = f"RPT-{datetime.now().strftime('%Y%m%d-%H%M%S')}"
-            report['emotionalTrends']['sentimentScore'] = summary['emotionalTone']
+            
+            # Convert wellness score (0-100)
+            if 'emotionalTrends' in report:
+                report['emotionalTrends']['wellnessScore'] = summary['emotionalTone']
             
             return report
         except Exception as e:
@@ -179,34 +224,84 @@ IMPORTANT:
             return self._generate_fallback_report(summary)
     
     def _generate_fallback_report(self, summary: Dict) -> Dict:
-        """Generate a basic report if Gemini API fails."""
+        """Enhanced fallback report with 0-100 scoring"""
+        wellness_score = summary.get('emotionalTone', 50)
+        
+        # Determine concern level based on 0-100 scale
+        if wellness_score >= 80:
+            concern_level = "none"
+            trend_direction = "improving"
+        elif wellness_score >= 60:
+            concern_level = "minimal"
+            trend_direction = "stable"
+        elif wellness_score >= 40:
+            concern_level = "moderate"
+            trend_direction = "stable"
+        else:
+            concern_level = "elevated"
+            trend_direction = "concerning"
+        
         return {
-            "generatedAt": datetime.now().isoformat(),
-            "reportId": f"RPT-{datetime.now().strftime('%Y%m%d-%H%M%S')}",
-            "executiveSummary": f"Digital activity report based on {summary['totalKeywords']} searches and {summary['totalApps']} applications used.",
+            "executiveSummary": f"Analysis based on {summary['totalApps']} applications and {summary['totalKeywords']} search queries reveals a digital behavior pattern with wellness score of {wellness_score}/100. The child shows engagement with {', '.join(summary['topApps'][:3])} and demonstrates {trend_direction} behavioral trends.",
             "keyFindings": [
-                f"Most used applications: {', '.join(summary['topApps'][:3])}",
-                f"Average weekly screen time: {summary['screenTimeWeekly']} minutes",
-                f"Blocked attempts: {summary['blockedAttempts']}"
+                f"Screen Time: {summary['screenTimeWeekly']} minutes weekly average",
+                f"Application Portfolio: {summary['totalApps']} unique applications accessed",
+                f"Search Activity: {summary['totalKeywords']} distinct search queries recorded",
+                f"Wellness Metric: {wellness_score}/100 indicating {concern_level} concern level",
+                f"Trend Direction: {trend_direction.capitalize()} behavioral patterns observed"
             ],
             "emotionalTrends": {
-                "sentimentScore": summary['emotionalTone'],
-                "interpretation": "Monitoring data collected successfully.",
-                "trendDirection": "stable"
+                "interpretation": f"Digital behavior wellness score of {wellness_score}/100 suggests {trend_direction} emotional patterns with {concern_level} level of concern requiring parental awareness.",
+                "trendDirection": trend_direction,
+                "concernLevel": concern_level,
+                "wellnessScore": wellness_score,
+                "strengths": ["Consistent digital engagement", "Varied application usage"],
+                "areasForGrowth": ["Screen time management", "Content diversity"]
             },
-            "positiveHabits": ["Regular usage patterns", "Respecting time limits"],
-            "possibleConcerns": ["Continue monitoring for changes"],
-            "guidanceForParents": "Continue open communication with your child about their digital activities. Review usage patterns regularly and adjust limits as needed.",
+            "positiveHabits": [
+                "Regular engagement with educational/creative content",
+                "Diverse application usage patterns",
+                "Consistent daily routine establishment",
+                "Active digital exploration and learning"
+            ],
+            "possibleConcerns": [
+                f"Screen time monitoring recommended - {summary['screenTimeWeekly']} minutes weekly",
+                f"{summary['blockedAttempts']} blocked access attempts require discussion"
+            ] if summary['blockedAttempts'] > 0 else ["No immediate concerns detected"],
+            "developmentalInsights": {
+                "cognitiveGrowth": "Demonstrates curiosity through varied search queries and application exploration",
+                "socialDevelopment": "Digital interaction patterns suggest age-appropriate social engagement",
+                "emotionalMaturity": f"Wellness score of {wellness_score}/100 indicates {concern_level} emotional regulation",
+                "digitalLiteracy": "Developing healthy navigation skills across digital platforms"
+            },
+            "guidanceForParents": f"Your child's digital wellness score of {wellness_score}/100 reflects {concern_level} areas for parental guidance. Approach conversations with curiosity rather than judgment. Start by acknowledging their interests in {', '.join(summary['topApps'][:2])}, then collaboratively set boundaries. Create 'tech-free zones' for family connection (meals, bedtime). Use the 3 C's: Connection (understand their digital world), Collaboration (set limits together), Consistency (enforce agreed boundaries lovingly). Remember: your goal is digital wellness, not digital perfection.",
             "screenTimePolicy": {
                 "recommendedDailyLimit": 120,
                 "weekendLimit": 180,
                 "suggestedBedtime": "21:30",
-                "reasoning": "Standard recommendations for healthy digital habits"
+                "reasoning": f"Based on {summary['screenTimeWeekly']} minutes weekly average and developmental best practices",
+                "flexibilityFactors": ["Academic projects", "Creative pursuits", "Social connection needs"],
+                "adjustmentTriggers": ["Improved self-regulation", "Academic performance changes", "Behavioral shifts"]
             },
             "conversationStarters": [
-                "What did you learn online this week?",
-                "Is there anything interesting you'd like to share?"
-            ]
+                f"I noticed you've been exploring {summary['topApps'][0] if summary['topApps'] else 'various apps'} - what do you find most interesting about it?",
+                "If you could design your ideal app, what would it do and why?",
+                "What's something you learned online this week that surprised you?",
+                f"I see you're curious about {summary['recentKeywords'][0] if summary['recentKeywords'] else 'different topics'} - want to explore that together?",
+                "What's one thing you wish adults understood better about being online?"
+            ],
+            "actionPlan": {
+                "immediate": ["Schedule 30-minute 'digital wellness' conversation", "Review current screen time together"],
+                "shortTerm": ["Establish collaborative tech boundaries", "Identify 2-3 screen-free family activities"],
+                "longTerm": ["Build digital literacy skills", "Foster open communication about online experiences"]
+            },
+            "resources": [
+                "Common Sense Media - Age-appropriate content guides",
+                "Screen Time Action Network - Family media plans",
+                "Digital Wellness Lab - Parent resources"
+            ],
+            "generatedAt": datetime.now().isoformat(),
+            "reportId": f"RPT-FALLBACK-{datetime.now().strftime('%Y%m%d-%H%M%S')}"
         }
     
     def analyze_app_usage(self, apps: List[Dict]) -> Dict:

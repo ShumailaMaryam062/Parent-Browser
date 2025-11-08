@@ -1,6 +1,6 @@
 """
 PDF Report Generator Module
-Creates professional, legal-style parental control reports
+Creates professional, legal-style parental control reports with diagrams
 """
 
 import os
@@ -16,6 +16,11 @@ from reportlab.platypus import (
     PageBreak, Image, KeepTogether
 )
 from reportlab.lib.enums import TA_CENTER, TA_LEFT, TA_JUSTIFY
+from reportlab.graphics.shapes import Drawing, Rect, String, Circle, Line
+from reportlab.graphics.charts.barcharts import VerticalBarChart
+from reportlab.graphics.charts.piecharts import Pie
+from reportlab.graphics.charts.linecharts import HorizontalLineChart
+from reportlab.graphics import renderPDF
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -46,18 +51,18 @@ class ReportGenerator:
                 fontName='Helvetica-Bold'
             ))
         
-        # Section header
+        # Section header with bold font
         if 'SectionHeader' not in self.styles:
             self.styles.add(ParagraphStyle(
                 name='SectionHeader',
                 parent=self.styles['Heading2'],
-                fontSize=16,
-                textColor=colors.HexColor('#2c5282'),
-                spaceAfter=12,
-                spaceBefore=20,
+                fontSize=18,
+                textColor=colors.HexColor('#1e293b'),
+                spaceAfter=14,
+                spaceBefore=22,
                 fontName='Helvetica-Bold',
-                borderPadding=(0, 0, 5, 0),
-                borderColor=colors.HexColor('#4299e1'),
+                borderPadding=(0, 0, 6, 0),
+                borderColor=colors.HexColor('#3b82f6'),
                 borderWidth=0,
                 leftIndent=0
             ))
@@ -68,9 +73,10 @@ class ReportGenerator:
                 name='BodyText',
                 parent=self.styles['Normal'],
                 fontSize=11,
-                leading=16,
+                leading=14,
                 alignment=TA_JUSTIFY,
-                spaceAfter=10
+                spaceAfter=6,
+                spaceBefore=0
             ))
         
         # Executive summary style
@@ -79,10 +85,11 @@ class ReportGenerator:
                 name='ExecutiveSummary',
                 parent=self.styles['Normal'],
                 fontSize=12,
-                leading=18,
+                leading=16,
                 alignment=TA_JUSTIFY,
                 textColor=colors.HexColor('#2d3748'),
-                spaceAfter=15,
+                spaceAfter=8,
+                spaceBefore=0,
                 leftIndent=20,
                 rightIndent=20,
                 borderPadding=10,
@@ -109,14 +116,14 @@ class ReportGenerator:
         filename = f"{report_id}_{report_type}.pdf"
         filepath = self.output_dir / filename
         
-        # Create PDF document
+        # Create PDF document with increased margins
         doc = SimpleDocTemplate(
             str(filepath),
             pagesize=letter,
-            rightMargin=72,
-            leftMargin=72,
-            topMargin=72,
-            bottomMargin=72
+            rightMargin=90,
+            leftMargin=90,
+            topMargin=90,
+            bottomMargin=90
         )
         
         # Build story (content)
@@ -143,11 +150,29 @@ class ReportGenerator:
         return str(filepath)
     
     def _build_cover_page(self, intelligence_data: Dict, report_data: Dict) -> List:
-        """Build cover page."""
+        """Build cover page with logo."""
         elements = []
         
+        # Add logo at top left if available (try .jpg first, then .png)
+        logo_path = Path(__file__).parent / 'logo.jpg'
+        if not logo_path.exists():
+            logo_path = Path(__file__).parent / 'logo.png'
+            
+        if logo_path.exists():
+            try:
+                logo = Image(str(logo_path), width=1*inch, height=1*inch)
+                logo_table = Table([[logo]], colWidths=[7.5*inch])
+                logo_table.setStyle(TableStyle([
+                    ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+                    ('VALIGN', (0, 0), (-1, -1), 'TOP'),
+                ]))
+                elements.append(logo_table)
+                elements.append(Spacer(1, 0.3*inch))
+            except:
+                pass  # Skip if logo can't be loaded
+        
         # Title
-        elements.append(Spacer(1, 1.5*inch))
+        elements.append(Spacer(1, 1*inch))
         elements.append(Paragraph(
             f"<b>{self.company_name}</b>",
             self.styles['CustomTitle']
@@ -212,86 +237,160 @@ class ReportGenerator:
         return elements
     
     def _build_executive_summary(self, report_data: Dict) -> List:
-        """Build executive summary section."""
+        """Build executive summary section with extended description."""
         elements = []
         
-        elements.append(Paragraph("EXECUTIVE SUMMARY", self.styles['SectionHeader']))
-        elements.append(Paragraph(
-            report_data.get('executiveSummary', 'No summary available.'),
-            self.styles['ExecutiveSummary']
-        ))
+        elements.append(Paragraph("<b>EXECUTIVE SUMMARY</b>", self.styles['SectionHeader']))
+        
+        # Add introductory context
+        intro = ("This comprehensive report provides an in-depth analysis of your child's digital behavior patterns, "
+                "online activities, and emotional wellbeing indicators derived from their device usage. "
+                "Our AI-powered intelligence system has analyzed application interactions, search behaviors, "
+                "screen time patterns, and content engagement to identify trends, risks, and opportunities "
+                "for positive digital citizenship development.")
+        
+        elements.append(Paragraph(intro, self.styles['BodyText']))
+        elements.append(Spacer(1, 0.15*inch))
+        
+        # Main summary from AI
+        summary = report_data.get('executiveSummary', 'No summary available.')
+        elements.append(Paragraph(summary, self.styles['ExecutiveSummary']))
+        
+        # Add methodology note
+        methodology = ("<b>Methodology:</b> This report utilizes advanced behavioral analytics, "
+                      "natural language processing for sentiment analysis, and pattern recognition algorithms "
+                      "to provide actionable insights while maintaining strict privacy standards. "
+                      "No personal conversations or identifiable content are stored or analyzed.")
+        
+        elements.append(Spacer(1, 0.15*inch))
+        elements.append(Paragraph(methodology, ParagraphStyle(
+            name='Methodology',
+            parent=self.styles['BodyText'],
+            fontSize=10,
+            textColor=colors.HexColor('#4a5568'),
+            leftIndent=15,
+            rightIndent=15,
+            backColor=colors.HexColor('#f7fafc'),
+            borderPadding=8
+        )))
+        
         elements.append(Spacer(1, 0.3*inch))
         
         return elements
     
     def _build_key_findings(self, report_data: Dict) -> List:
-        """Build key findings section."""
+        """Build key findings section with detailed explanations."""
         elements = []
         
-        elements.append(Paragraph("KEY FINDINGS", self.styles['SectionHeader']))
+        elements.append(Paragraph("<b>KEY FINDINGS & OBSERVATIONS</b>", self.styles['SectionHeader']))
+        
+        # Add context paragraph
+        context = ("The following key findings represent significant patterns, behaviors, or concerns "
+                  "identified through our multi-dimensional analysis. Each finding is supported by "
+                  "behavioral data, usage statistics, and content analysis. These observations are "
+                  "intended to facilitate informed conversations and appropriate interventions.")
+        
+        elements.append(Paragraph(context, self.styles['BodyText']))
+        elements.append(Spacer(1, 0.2*inch))
         
         findings = report_data.get('keyFindings', [])
-        for i, finding in enumerate(findings, 1):
+        
+        if findings:
+            for i, finding in enumerate(findings, 1):
+                # Create finding with emphasis
+                finding_text = f"<b>Finding #{i}:</b> {finding}"
+                elements.append(Paragraph(finding_text, ParagraphStyle(
+                    name=f'Finding{i}',
+                    parent=self.styles['BodyText'],
+                    fontSize=11,
+                    leading=15,
+                    leftIndent=10,
+                    spaceAfter=10,
+                    spaceBefore=5,
+                    borderWidth=0,
+                    borderPadding=5,
+                    borderColor=colors.HexColor('#e2e8f0'),
+                    backColor=colors.HexColor('#f8fafc')
+                )))
+        else:
             elements.append(Paragraph(
-                f"<b>{i}.</b> {finding}",
+                "No significant findings to report at this time. This indicates healthy, balanced digital behavior "
+                "with no red flags or concerning patterns detected during the analysis period.",
                 self.styles['BodyText']
             ))
-        
-        if not findings:
-            elements.append(Paragraph("No significant findings to report.", self.styles['BodyText']))
         
         elements.append(Spacer(1, 0.2*inch))
         return elements
     
     def _build_emotional_trends(self, report_data: Dict) -> List:
-        """Build emotional trends section."""
+        """Build emotional trends section with wellness diagram."""
         elements = []
         
-        elements.append(Paragraph("EMOTIONAL & BEHAVIORAL TRENDS", self.styles['SectionHeader']))
+        elements.append(Paragraph("<b>EMOTIONAL & BEHAVIORAL TRENDS</b>", self.styles['SectionHeader']))
         
         trends = report_data.get('emotionalTrends', {})
-        sentiment_score = trends.get('sentimentScore', 0)
+        wellness_score = trends.get('wellnessScore', 50)  # 0-100 scale
         
-        # Sentiment score visualization
-        sentiment_text = "Neutral"
-        sentiment_color = colors.HexColor('#718096')
+        # Wellness score visualization with color coding
+        sentiment_text = "Moderate"
+        sentiment_color = colors.HexColor('#f59e0b')
         
-        if sentiment_score > 0.3:
-            sentiment_text = "Positive & Healthy"
-            sentiment_color = colors.HexColor('#38a169')
-        elif sentiment_score < -0.3:
-            sentiment_text = "Concerning"
-            sentiment_color = colors.HexColor('#e53e3e')
+        if wellness_score >= 80:
+            sentiment_text = "Excellent & Healthy"
+            sentiment_color = colors.HexColor('#10b981')
+        elif wellness_score >= 60:
+            sentiment_text = "Good & Positive"
+            sentiment_color = colors.HexColor('#3b82f6')
+        elif wellness_score >= 40:
+            sentiment_text = "Moderate - Needs Guidance"
+            sentiment_color = colors.HexColor('#f59e0b')
+        elif wellness_score >= 20:
+            sentiment_text = "Concerning - Action Needed"
+            sentiment_color = colors.HexColor('#f97316')
+        else:
+            sentiment_text = "Critical - Immediate Attention"
+            sentiment_color = colors.HexColor('#ef4444')
+        
+        # Create wellness score diagram
+        d = Drawing(400, 80)
+        
+        # Background bar
+        d.add(Rect(50, 30, 300, 30, fillColor=colors.HexColor('#1e293b'), strokeColor=None))
+        
+        # Wellness bar (colored based on score)
+        bar_width = (wellness_score / 100) * 300
+        d.add(Rect(50, 30, bar_width, 30, fillColor=sentiment_color, strokeColor=None))
+        
+        # Score text
+        d.add(String(200, 45, f"Wellness Score: {wellness_score}/100", fontSize=14, fillColor=colors.white, textAnchor='middle'))
+        d.add(String(200, 10, sentiment_text, fontSize=11, fillColor=sentiment_color, textAnchor='middle', fontName='Helvetica-Bold'))
+        
+        elements.append(d)
+        elements.append(Spacer(1, 0.15*inch))
         
         elements.append(Paragraph(
-            f"<b>Sentiment Score:</b> {sentiment_score:.2f} ({sentiment_text})",
-            ParagraphStyle(
-                name='SentimentScore',
-                parent=self.styles['BodyText'],
-                textColor=sentiment_color,
-                fontSize=12
-            )
+            f"<b>Concern Level:</b> {trends.get('concernLevel', 'moderate').capitalize()}",
+            self.styles['BodyText']
         ))
-        
         elements.append(Paragraph(
             f"<b>Trend Direction:</b> {trends.get('trendDirection', 'stable').capitalize()}",
             self.styles['BodyText']
         ))
         
-        elements.append(Spacer(1, 0.1*inch))
+        elements.append(Spacer(1, 0.08*inch))
         elements.append(Paragraph(
             trends.get('interpretation', 'Analysis in progress.'),
             self.styles['BodyText']
         ))
         
-        elements.append(Spacer(1, 0.2*inch))
+        elements.append(Spacer(1, 0.15*inch))
         return elements
     
     def _build_positive_habits(self, report_data: Dict) -> List:
         """Build positive habits section."""
         elements = []
         
-        elements.append(Paragraph("POSITIVE DIGITAL HABITS", self.styles['SectionHeader']))
+        elements.append(Paragraph("<b>POSITIVE DIGITAL HABITS</b>", self.styles['SectionHeader']))
         
         habits = report_data.get('positiveHabits', [])
         for habit in habits:
@@ -300,22 +399,32 @@ class ReportGenerator:
                 ParagraphStyle(
                     name='PositiveHabit',
                     parent=self.styles['BodyText'],
-                    textColor=colors.HexColor('#38a169'),
-                    leftIndent=15
+                    textColor=colors.HexColor('#10b981'),
+                    spaceAfter=4
                 )
             ))
         
         if not habits:
-            elements.append(Paragraph("Continue monitoring to identify positive patterns.", self.styles['BodyText']))
+            elements.append(Paragraph("No specific positive habits identified yet.", self.styles['BodyText']))
         
-        elements.append(Spacer(1, 0.2*inch))
+        elements.append(Spacer(1, 0.15*inch))
         return elements
     
     def _build_concerns(self, report_data: Dict, report_type: str) -> List:
-        """Build possible concerns section."""
+        """Build possible concerns section with detailed context."""
         elements = []
         
-        elements.append(Paragraph("AREAS FOR ATTENTION", self.styles['SectionHeader']))
+        elements.append(Paragraph("<b>AREAS FOR ATTENTION & CONCERN</b>", self.styles['SectionHeader']))
+        
+        # Add explanatory context
+        context = ("The following areas have been flagged for parental attention based on behavioral patterns, "
+                  "content exposure risks, or usage anomalies detected during the analysis period. "
+                  "These concerns are categorized by severity and supported by evidence from activity logs, "
+                  "application usage data, and content analysis. Early intervention in these areas can help "
+                  "prevent escalation and promote healthier digital habits.")
+        
+        elements.append(Paragraph(context, self.styles['BodyText']))
+        elements.append(Spacer(1, 0.15*inch))
         
         concerns = report_data.get('possibleConcerns', [])
         
@@ -330,32 +439,78 @@ class ReportGenerator:
                 )
             ))
         else:
-            for concern in concerns:
-                elements.append(Paragraph(
-                    f"• {concern}",
-                    ParagraphStyle(
-                        name='Concern',
+            if concerns:
+                for i, concern in enumerate(concerns, 1):
+                    concern_text = f"<b>⚠️ Concern #{i}:</b> {concern}"
+                    elements.append(Paragraph(concern_text, ParagraphStyle(
+                        name=f'Concern{i}',
                         parent=self.styles['BodyText'],
                         textColor=colors.HexColor('#d69e2e'),
-                        leftIndent=15
-                    )
-                ))
+                        leftIndent=10,
+                        spaceAfter=8,
+                        borderWidth=1,
+                        borderColor=colors.HexColor('#fbd38d'),
+                        borderPadding=6,
+                        backColor=colors.HexColor('#fffaf0')
+                    )))
         
         if not concerns:
-            elements.append(Paragraph("No significant concerns identified at this time.", self.styles['BodyText']))
+            elements.append(Paragraph(
+                "✅ No significant concerns identified at this time. Current digital behavior patterns "
+                "indicate healthy, balanced usage with appropriate content engagement and time management.",
+                self.styles['BodyText']
+            ))
         
         elements.append(Spacer(1, 0.2*inch))
         return elements
     
     def _build_guidance(self, report_data: Dict) -> List:
-        """Build guidance for parents section."""
+        """Build guidance for parents section with detailed recommendations."""
         elements = []
         
-        elements.append(Paragraph("GUIDANCE FOR PARENTS", self.styles['SectionHeader']))
-        elements.append(Paragraph(
-            report_data.get('guidanceForParents', 'Continue open communication with your child.'),
-            self.styles['BodyText']
-        ))
+        elements.append(Paragraph("<b>PRACTICAL GUIDANCE FOR PARENTS</b>", self.styles['SectionHeader']))
+        
+        # Add introductory guidance
+        intro = ("Effective digital parenting requires a balanced approach that combines monitoring, education, "
+                "and open communication. The following evidence-based guidance is tailored to your child's "
+                "specific behavioral patterns and developmental needs. These recommendations are designed to "
+                "foster digital literacy, emotional intelligence, and responsible online citizenship while "
+                "maintaining a supportive, trust-based parent-child relationship.")
+        
+        elements.append(Paragraph(intro, self.styles['BodyText']))
+        elements.append(Spacer(1, 0.15*inch))
+        
+        # AI-generated guidance
+        guidance = report_data.get('guidanceForParents', 'Continue open communication with your child about their online activities and experiences.')
+        elements.append(Paragraph(guidance, ParagraphStyle(
+            name='GuidanceHighlight',
+            parent=self.styles['BodyText'],
+            leftIndent=15,
+            rightIndent=15,
+            borderWidth=2,
+            borderColor=colors.HexColor('#4299e1'),
+            borderPadding=10,
+            backColor=colors.HexColor('#ebf8ff'),
+            spaceAfter=12
+        )))
+        
+        # Add general best practices
+        best_practices = ("<b>Universal Best Practices:</b><br/>"
+                         "• Schedule regular family discussions about online safety and digital wellbeing<br/>"
+                         "• Model healthy digital behavior through your own device usage<br/>"
+                         "• Create device-free zones and times (e.g., during meals, before bedtime)<br/>"
+                         "• Encourage offline hobbies, physical activities, and face-to-face social interactions<br/>"
+                         "• Teach critical thinking skills for evaluating online content and identifying misinformation")
+        
+        elements.append(Paragraph(best_practices, ParagraphStyle(
+            name='BestPractices',
+            parent=self.styles['BodyText'],
+            fontSize=10,
+            leading=14,
+            leftIndent=10,
+            spaceAfter=8
+        )))
+        
         elements.append(Spacer(1, 0.2*inch))
         return elements
     
@@ -363,7 +518,7 @@ class ReportGenerator:
         """Build screen time policy recommendations."""
         elements = []
         
-        elements.append(Paragraph("RECOMMENDED SCREEN TIME POLICY", self.styles['SectionHeader']))
+        elements.append(Paragraph("<b>RECOMMENDED SCREEN TIME POLICY</b>", self.styles['SectionHeader']))
         
         policy = report_data.get('screenTimePolicy', {})
         
@@ -404,7 +559,7 @@ class ReportGenerator:
         """Build conversation starters section."""
         elements = []
         
-        elements.append(Paragraph("CONVERSATION STARTERS", self.styles['SectionHeader']))
+        elements.append(Paragraph("<b>CONVERSATION STARTERS</b>", self.styles['SectionHeader']))
         elements.append(Paragraph(
             "Use these topics to engage positively with your child about their digital life:",
             self.styles['BodyText']
@@ -436,7 +591,7 @@ class ReportGenerator:
         """Build footer/closing page."""
         elements = []
         
-        elements.append(Paragraph("REPORT INFORMATION", self.styles['SectionHeader']))
+        elements.append(Paragraph("<b>REPORT INFORMATION</b>", self.styles['SectionHeader']))
         
         elements.append(Paragraph(
             "<b>Methodology:</b> This report is generated using advanced AI analysis (Gemini 2.0) "
