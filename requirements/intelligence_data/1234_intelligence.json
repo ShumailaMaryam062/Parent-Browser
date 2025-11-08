@@ -1,0 +1,171 @@
+{
+  "childProfile": {
+    "childId": "child_001",
+    "deviceKey": "1234",
+    "profileCreated": "2025-11-08T18:20:05.794291",
+    "lastUpdated": "2025-11-08T18:20:21.662077"
+  },
+  "behavioralData": {
+    "mostUsedApps": [
+      {
+        "appName": "Chrome Browser",
+        "usageCount": 2,
+        "categoryType": "browser",
+        "lastUsed": "2025-11-08T18:20:21.662077"
+      },
+      {
+        "appName": "YouTube",
+        "usageCount": 1,
+        "categoryType": "browser",
+        "lastUsed": "2025-11-08T18:20:21.662077"
+      }
+    ],
+    "searchedKeywords": [
+      {
+        "keyword": "science homework",
+        "frequency": 1,
+        "sentiment": 0,
+        "category": "neutral",
+        "timestamp": "2025-11-08T18:20:21.662077"
+      },
+      {
+        "keyword": "educational videos",
+        "frequency": 1,
+        "sentiment": 0,
+        "category": "neutral",
+        "timestamp": "2025-11-08T18:20:21.662077"
+      },
+      {
+        "keyword": "math tutorials",
+        "frequency": 1,
+        "sentiment": 0,
+        "category": "neutral",
+        "timestamp": "2025-11-08T18:20:21.662077"
+      }
+    ],
+    "blockedNSFWAttempts": [
+      {
+        "keyword": "science homework",
+        "appName": "Chrome Browser",
+        "timestamp": 1731052800000,
+        "blockHash": "0000a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef"
+      },
+      {
+        "keyword": "educational videos",
+        "appName": "YouTube",
+        "timestamp": 1731056400000,
+        "blockHash": "0000b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef12"
+      },
+      {
+        "keyword": "math tutorials",
+        "appName": "Chrome Browser",
+        "timestamp": 1731060000000,
+        "blockHash": "0000c3d4e5f6789012345678901234567890abcdef1234567890abcdef1234"
+      }
+    ],
+    "screenTimeData": {
+      "dailyScreenTime": [
+        {
+          "date": "",
+          "minutes": 0,
+          "peakHours": []
+        }
+      ],
+      "weeklyAverage": 0,
+      "bedtimeActivity": {
+        "lateNightSessions": 0,
+        "avgSleepTime": "22:00"
+      }
+    },
+    "emotionalTone": {
+      "overallSentiment": 0.0,
+      "trendingPositive": [],
+      "trendingRisky": [],
+      "neutralPatterns": [
+        "science homework",
+        "educational videos",
+        "math tutorials"
+      ]
+    }
+  },
+  "analyticsFiles": {
+    "topAppsChart": "charts/1234_top_apps.json",
+    "screenTimeTrend": "charts/1234_screen_time.json",
+    "blockedAttemptsScatter": "charts/1234_blocked_attempts.json",
+    "keywordPieChart": "charts/1234_keyword_sentiment.json",
+    "sleepTimeHeatmap": "charts/1234_sleep_heatmap.json"
+  },
+  "conversationStarters": [
+    {
+      "id": 1,
+      "type": "positive",
+      "title": "Favorite Application",
+      "message": "Your child frequently uses Chrome Browser. This could be a great conversation starter!",
+      "actionSuggestion": "Ask them what they like most about Chrome Browser and if they've discovered anything interesting."
+    }
+  ],
+  "syntheticReport": {
+    "generatedAt": "2025-11-08T18:21:17.713574",
+    "reportId": "RPT-20251108-182117",
+    "executiveSummary": "Digital activity report based on 3 searches and 2 applications used.",
+    "keyFindings": [
+      "Most used applications: Chrome Browser, YouTube",
+      "Average weekly screen time: 0 minutes",
+      "Blocked attempts: 3"
+    ],
+    "emotionalTrends": {
+      "sentimentScore": 0.0,
+      "interpretation": "Monitoring data collected successfully.",
+      "trendDirection": "stable"
+    },
+    "positiveHabits": [
+      "Regular usage patterns",
+      "Respecting time limits"
+    ],
+    "possibleConcerns": [
+      "Continue monitoring for changes"
+    ],
+    "guidanceForParents": "Continue open communication with your child about their digital activities. Review usage patterns regularly and adjust limits as needed.",
+    "screenTimePolicy": {
+      "recommendedDailyLimit": 120,
+      "weekendLimit": 180,
+      "suggestedBedtime": "21:30",
+      "reasoning": "Standard recommendations for healthy digital habits"
+    },
+    "conversationStarters": [
+      "What did you learn online this week?",
+      "Is there anything interesting you'd like to share?"
+    ]
+  },
+  "policySettings": {
+    "currentPolicy": {
+      "dailyLimitMinutes": 120,
+      "weekendLimitMinutes": 180,
+      "bedtimeHour": "21:30",
+      "autoApply": true
+    },
+    "policyHistory": [
+      {
+        "policy": {
+          "dailyLimitMinutes": 120,
+          "weekendLimitMinutes": 180,
+          "bedtimeHour": "21:30",
+          "blockedCategories": [
+            "adult",
+            "violence"
+          ],
+          "whitelistedApps": [],
+          "autoApply": true
+        },
+        "changedAt": "2025-11-08T18:27:10.091972"
+      }
+    ],
+    "lastUpdated": "2025-11-08T18:27:10.091972"
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "lastSync": "2025-11-08T18:20:21.662077",
+    "totalViolations": 3,
+    "integrityVerified": true
+  }
+}

@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔐 Blockchain Parental Control Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            padding: 40px 20px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .login-box {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin: 20px auto;
+            max-width: 600px;
+        }
+        
+        .login-box h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: monospace;
+            transition: border-color 0.3s;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .dashboard {
+            display: none;
+        }
+        
+        .dashboard.active {
+            display: block;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .stat-card h3 {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        
+        .stat-card .value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .stat-card .label {
+            font-size: 0.85rem;
+            color: #999;
+            margin-top: 5px;
+        }
+        
+        .violations-table {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        thead {
+            background: #f8f9fa;
+        }
+        
+        th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            color: #666;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .keyword {
+            background: #ff6b6b;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .app-name {
+            font-weight: 600;
+            color: #667eea;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .device-info {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .device-info h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .device-info p {
+            margin: 8px 0;
+            color: #666;
+        }
+        
+        .integrity-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .integrity-badge.valid {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .integrity-badge.invalid {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .logout-btn {
+            background: #dc3545;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 Blockchain Parental Control Dashboard</h1>
+            <p>Privacy-Focused Monitoring with Immutable Blockchain Technology</p>
+        </div>
+        
+        <!-- Login Section -->
+        <div id="loginSection" class="login-box">
+            <h2>Enter Your Blockchain Key</h2>
+            <p style="color: #666; margin-bottom: 20px;">
+                Enter the 18-segment blockchain key from your device to view monitoring data.
+            </p>
+            
+            <div class="input-group">
+                <label for="blockchainKey">Blockchain Key:</label>
+                <input 
+                    type="text" 
+                    id="blockchainKey" 
+                    placeholder="xxxxxxxx-xxxxxxxx-xxxxxxxx-xxxxxxxx-..."
+                    autocomplete="off"
+                >
+            </div>
+            
+            <button class="btn" onclick="loadDashboard()">Access Dashboard</button>
+            
+            <div id="loginError" style="margin-top: 20px;"></div>
+            
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0;">
+                <p style="color: #999; font-size: 0.9rem; text-align: center;">
+                    <strong>Where to find your key:</strong><br>
+                    Open LimitX Browser → Settings → Parental Control Dashboard<br>
+                    Copy the blockchain key and paste it here.<br>
+                    <br>
+                    <span style="color: #667eea;"><strong>Quick Test:</strong> Use key <code style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px;">1234</code> for admin/demo access</span>
+                </p>
+            </div>
+        </div>
+        
+        <!-- Dashboard Section -->
+        <div id="dashboardSection" class="dashboard">
+            <!-- Device Info -->
+            <div class="device-info">
+                <h3>📱 Device Information</h3>
+                <p><strong>Device ID:</strong> <span id="deviceId">-</span></p>
+                <p><strong>Last Sync:</strong> <span id="lastSync">-</span></p>
+                <p><strong>Blockchain Integrity:</strong> <span id="integrity">-</span></p>
+            </div>
+            
+            <!-- Statistics -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Violations</h3>
+                    <div class="value" id="totalViolations">0</div>
+                    <div class="label">All time</div>
+                </div>
+                
+                <div class="stat-card">
+                    <h3>Most Active App</h3>
+                    <div class="value" style="font-size: 1.5rem;" id="topApp">-</div>
+                    <div class="label" id="topAppCount">-</div>
+                </div>
+                
+                <div class="stat-card">
+                    <h3>Most Detected Keyword</h3>
+                    <div class="value" style="font-size: 1.5rem;" id="topKeyword">-</div>
+                    <div class="label" id="topKeywordCount">-</div>
+                </div>
+            </div>
+            
+            <!-- Violations Table -->
+            <div class="violations-table">
+                <h2 style="margin-bottom: 20px;">📊 Violation History</h2>
+                <div id="tableContent"></div>
+            </div>
+            
+            <button class="btn logout-btn" onclick="logout()">🚪 Logout</button>
+        </div>
+        
+        <!-- Loading -->
+        <div id="loadingSection" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p style="color: white; font-size: 1.2rem;">Loading dashboard data...</p>
+        </div>
+    </div>
+    
+    <script>
+        let currentKey = null;
+        
+        function validateKeyFormat(key) {
+            const segments = key.split('-');
+            if (segments.length !== 18) return false;
+            
+            for (const segment of segments) {
+                if (segment.length !== 8 || !/^[0-9a-f]+$/.test(segment)) {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
+        async function loadDashboard() {
+            const key = document.getElementById('blockchainKey').value.trim();
+            const errorDiv = document.getElementById('loginError');
+            
+            errorDiv.innerHTML = '';
+            
+            if (!key) {
+                errorDiv.innerHTML = '<div class="alert alert-error">Please enter a blockchain key</div>';
+                return;
+            }
+            
+            if (!validateKeyFormat(key)) {
+                errorDiv.innerHTML = '<div class="alert alert-error">Invalid blockchain key format. Key must have 18 segments separated by hyphens.</div>';
+                return;
+            }
+            
+            // Show loading
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('loadingSection').style.display = 'block';
+            
+            try {
+                // Fetch dashboard data
+                const response = await fetch(`/api/dashboard/${key}`);
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.message || data.error || 'Failed to load dashboard');
+                }
+                
+                currentKey = key;
+                displayDashboard(data);
+                
+            } catch (error) {
+                document.getElementById('loadingSection').style.display = 'none';
+                document.getElementById('loginSection').style.display = 'block';
+                errorDiv.innerHTML = `<div class="alert alert-error"><strong>Error:</strong> ${error.message}</div>`;
+            }
+        }
+        
+        function displayDashboard(data) {
+            // Hide loading and login, show dashboard
+            document.getElementById('loadingSection').style.display = 'none';
+            document.getElementById('dashboardSection').classList.add('active');
+            
+            // Update device info
+            document.getElementById('deviceId').textContent = data.device_id || 'Unknown';
+            document.getElementById('lastSync').textContent = data.last_sync || 'Never';
+            
+            const integritySpan = document.getElementById('integrity');
+            if (data.blockchain_integrity) {
+                integritySpan.innerHTML = '<span class="integrity-badge valid">✓ Verified</span>';
+            } else {
+                integritySpan.innerHTML = '<span class="integrity-badge invalid">✗ Failed</span>';
+            }
+            
+            // Update statistics
+            document.getElementById('totalViolations').textContent = data.total_violations;
+            
+            // Calculate top app
+            if (data.violations.length > 0) {
+                const appCounts = {};
+                data.violations.forEach(v => {
+                    appCounts[v.app_name] = (appCounts[v.app_name] || 0) + 1;
+                });
+                
+                const topApp = Object.entries(appCounts).sort((a, b) => b[1] - a[1])[0];
+                document.getElementById('topApp').textContent = topApp[0];
+                document.getElementById('topAppCount').textContent = `${topApp[1]} violations`;
+                
+                // Calculate top keyword
+                const keywordCounts = {};
+                data.violations.forEach(v => {
+                    keywordCounts[v.keyword] = (keywordCounts[v.keyword] || 0) + 1;
+                });
+                
+                const topKeyword = Object.entries(keywordCounts).sort((a, b) => b[1] - a[1])[0];
+                document.getElementById('topKeyword').textContent = topKeyword[0];
+                document.getElementById('topKeywordCount').textContent = `${topKeyword[1]} times`;
+            }
+            
+            // Display violations table
+            const tableContent = document.getElementById('tableContent');
+            
+            if (data.violations.length === 0) {
+                tableContent.innerHTML = '<div class="alert alert-info">✅ No violations recorded yet. The device is monitoring correctly.</div>';
+            } else {
+                let tableHTML = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Date & Time</th>
+                                <th>App</th>
+                                <th>Keyword</th>
+                                <th>Block Hash</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+                
+                data.violations.forEach((violation, index) => {
+                    tableHTML += `
+                        <tr>
+                            <td>${index + 1}</td>
+                            <td>${violation.date}</td>
+                            <td><span class="app-name">${violation.app_name}</span></td>
+                            <td><span class="keyword">${violation.keyword}</span></td>
+                            <td style="font-family: monospace; font-size: 0.85rem;">${violation.hash.substring(0, 16)}...</td>
+                        </tr>
+                    `;
+                });
+                
+                tableHTML += '</tbody></table>';
+                tableContent.innerHTML = tableHTML;
+            }
+        }
+        
+        function logout() {
+            currentKey = null;
+            document.getElementById('dashboardSection').classList.remove('active');
+            document.getElementById('loginSection').style.display = 'block';
+            document.getElementById('blockchainKey').value = '';
+        }
+        
+        // Allow Enter key to submit
+        document.getElementById('blockchainKey').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                loadDashboard();
+            }
+        });
+    </script>
+</body>
+</html>

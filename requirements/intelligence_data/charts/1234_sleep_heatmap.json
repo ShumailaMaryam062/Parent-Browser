@@ -1,0 +1,49 @@
+{
+  "type": "matrix",
+  "labels": {
+    "x": [
+      "21:00",
+      "22:00",
+      "23:00",
+      "00:00",
+      "01:00",
+      "02:00",
+      "03:00",
+      "04:00",
+      "05:00",
+      "06:00"
+    ],
+    "y": [
+      ""
+    ]
+  },
+  "data": [
+    {
+      "date": "",
+      "activity": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "colorScale": {
+    "min": 0,
+    "max": 5,
+    "colors": [
+      "rgba(99, 102, 241, 0.1)",
+      "rgba(239, 68, 68, 0.9)"
+    ]
+  },
+  "options": {
+    "title": "Late Night Screen Activity Heatmap",
+    "description": "Activity detected during recommended sleep hours (9 PM - 7 AM)"
+  }
+}

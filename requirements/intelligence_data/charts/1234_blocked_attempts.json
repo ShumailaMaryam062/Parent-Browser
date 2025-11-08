@@ -1,0 +1,60 @@
+{
+  "type": "scatter",
+  "datasets": [
+    {
+      "label": "Blocked Attempts",
+      "data": [
+        {
+          "x": "2024-11-08 13:00",
+          "y": 1,
+          "keyword": "science homework"
+        },
+        {
+          "x": "2024-11-08 14:00",
+          "y": 2,
+          "keyword": "educational videos"
+        },
+        {
+          "x": "2024-11-08 15:00",
+          "y": 3,
+          "keyword": "math tutorials"
+        }
+      ],
+      "backgroundColor": "rgba(239, 68, 68, 0.6)",
+      "pointRadius": 6,
+      "pointHoverRadius": 8
+    }
+  ],
+  "options": {
+    "responsive": true,
+    "plugins": {
+      "legend": {
+        "display": true
+      },
+      "title": {
+        "display": true,
+        "text": "Blocked NSFW Attempts Over Time"
+      },
+      "tooltip": {
+        "callbacks": {
+          "label": "function(context) { return \"Keyword: \" + context.raw.keyword; }"
+        }
+      }
+    },
+    "scales": {
+      "y": {
+        "beginAtZero": true,
+        "title": {
+          "display": true,
+          "text": "Attempt Number"
+        }
+      },
+      "x": {
+        "title": {
+          "display": true,
+          "text": "Date & Time"
+        }
+      }
+    }
+  }
+}

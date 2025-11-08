@@ -1,0 +1,116 @@
+{
+  "childProfile": {
+    "childId": "child_001",
+    "deviceKey": "",
+    "profileCreated": "",
+    "lastUpdated": ""
+  },
+  "behavioralData": {
+    "mostUsedApps": [
+      {
+        "appName": "Chrome Browser",
+        "usageCount": 0,
+        "categoryType": "browser",
+        "lastUsed": ""
+      }
+    ],
+    "searchedKeywords": [
+      {
+        "keyword": "",
+        "frequency": 0,
+        "sentiment": 0,
+        "category": "neutral",
+        "timestamp": ""
+      }
+    ],
+    "blockedNSFWAttempts": [
+      {
+        "keyword": "",
+        "appName": "",
+        "timestamp": "",
+        "blockHash": ""
+      }
+    ],
+    "screenTimeData": {
+      "dailyScreenTime": [
+        {
+          "date": "",
+          "minutes": 0,
+          "peakHours": []
+        }
+      ],
+      "weeklyAverage": 0,
+      "bedtimeActivity": {
+        "lateNightSessions": 0,
+        "avgSleepTime": "22:00"
+      }
+    },
+    "emotionalTone": {
+      "overallSentiment": 0,
+      "trendingPositive": [],
+      "trendingRisky": [],
+      "neutralPatterns": []
+    }
+  },
+  "analyticsFiles": {
+    "topAppsChart": "charts/top_apps.json",
+    "screenTimeTrend": "charts/screen_time_trend.json",
+    "blockedAttemptsScatter": "charts/blocked_attempts.json",
+    "keywordPieChart": "charts/keyword_sentiment.json",
+    "sleepTimeHeatmap": "charts/sleep_activity.json"
+  },
+  "conversationStarters": [
+    {
+      "id": 1,
+      "type": "positive",
+      "title": "Encourage Learning",
+      "message": "Your child shows interest in educational content. Great opportunity to support their curiosity!",
+      "actionSuggestion": "Consider educational apps or supervised research time."
+    },
+    {
+      "id": 2,
+      "type": "concern",
+      "title": "Late Night Activity",
+      "message": "Increased browsing detected after bedtime hours.",
+      "actionSuggestion": "Review bedtime limits and discuss healthy sleep habits."
+    }
+  ],
+  "syntheticReport": {
+    "generatedAt": "",
+    "reportId": "",
+    "executiveSummary": "",
+    "keyFindings": [],
+    "emotionalTrends": {
+      "sentimentScore": 0,
+      "interpretation": "",
+      "trendDirection": "stable"
+    },
+    "positiveHabits": [],
+    "possibleConcerns": [],
+    "guidanceForParents": "",
+    "screenTimePolicy": {
+      "recommendedDailyLimit": 120,
+      "weekendLimit": 180,
+      "suggestedBedtime": "21:30",
+      "blockedCategories": ["adult", "violence", "gambling"],
+      "whitelistedCategories": ["education", "creativity", "science"]
+    }
+  },
+  "policySettings": {
+    "currentPolicy": {
+      "dailyLimitMinutes": 120,
+      "weekendLimitMinutes": 180,
+      "bedtimeHour": "21:30",
+      "blockedCategories": ["adult", "violence"],
+      "whitelistedApps": [],
+      "autoApply": true
+    },
+    "policyHistory": []
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "lastSync": "",
+    "totalViolations": 0,
+    "integrityVerified": true
+  }
+}

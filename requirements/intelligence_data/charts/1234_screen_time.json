@@ -1,0 +1,45 @@
+{
+  "type": "line",
+  "labels": [
+    ""
+  ],
+  "datasets": [
+    {
+      "label": "Screen Time (minutes)",
+      "data": [
+        0
+      ],
+      "borderColor": "rgba(99, 102, 241, 1)",
+      "backgroundColor": "rgba(99, 102, 241, 0.2)",
+      "fill": true,
+      "tension": 0.4
+    }
+  ],
+  "options": {
+    "responsive": true,
+    "plugins": {
+      "legend": {
+        "display": true
+      },
+      "title": {
+        "display": true,
+        "text": "Daily Screen Time Trend (Last 30 Days)"
+      }
+    },
+    "scales": {
+      "y": {
+        "beginAtZero": true,
+        "title": {
+          "display": true,
+          "text": "Minutes"
+        }
+      },
+      "x": {
+        "title": {
+          "display": true,
+          "text": "Date"
+        }
+      }
+    }
+  }
+}

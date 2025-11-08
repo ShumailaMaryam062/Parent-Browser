@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧠 LimitX Intelligence Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #1e293b;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 30px 20px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            color: #0c4a6e;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            color: #64748b;
+        }
+        
+        .login-box {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin: 20px auto;
+            max-width: 600px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #475569;
+            font-weight: 600;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: monospace;
+            transition: border-color 0.3s;
+        }
+        
+        .input-group input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn.secondary {
+            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+        }
+        
+        .btn.danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+        
+        .btn.success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        
+        .dashboard {
+            display: none;
+        }
+        
+        .dashboard.active {
+            display: block;
+        }
+        
+        .section {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        
+        .section h2 {
+            color: #0c4a6e;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .sentiment-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .sentiment-positive {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .sentiment-neutral {
+            background: #e2e8f0;
+            color: #475569;
+        }
+        
+        .sentiment-concerning {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 4px solid #3b82f6;
+        }
+        
+        .stat-card h3 {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+        
+        .stat-card .value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #0c4a6e;
+        }
+        
+        .stat-card .label {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-top: 5px;
+        }
+        
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .chart-container h3 {
+            color: #0c4a6e;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .conversation-starters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .starter-card {
+            background: linear-gradient(135deg, #fff7ed 0%, #fed7aa 100%);
+            border-radius: 15px;
+            padding: 20px;
+            border-left: 4px solid #f59e0b;
+        }
+        
+        .starter-card.positive {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border-left-color: #10b981;
+        }
+        
+        .starter-card.concern {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border-left-color: #ef4444;
+        }
+        
+        .starter-card h4 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #1e293b;
+        }
+        
+        .starter-card p {
+            font-size: 0.95rem;
+            color: #475569;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+        
+        .starter-card .action {
+            font-size: 0.9rem;
+            color: #0c4a6e;
+            font-weight: 600;
+            font-style: italic;
+        }
+        
+        .report-section {
+            background: linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .report-section h3 {
+            color: #5b21b6;
+            margin-bottom: 15px;
+        }
+        
+        .report-content {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+        
+        .report-content p {
+            line-height: 1.7;
+            color: #334155;
+            margin-bottom: 15px;
+        }
+        
+        .report-content ul {
+            list-style-position: inside;
+            color: #475569;
+            margin-left: 20px;
+        }
+        
+        .report-content li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        
+        .policy-editor {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 15px;
+        }
+        
+        .policy-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .policy-row label {
+            flex: 0 0 200px;
+            font-weight: 600;
+            color: #475569;
+        }
+        
+        .policy-row input,
+        .policy-row select {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .btn-group button {
+            flex: 1;
+        }
+        
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 2px solid #6ee7b7;
+        }
+        
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 2px solid #fca5a5;
+        }
+        
+        .alert-info {
+            background: #dbeafe;
+            color: #1e3a8a;
+            border: 2px solid #93c5fd;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .spinner {
+            border: 4px solid #e2e8f0;
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .tab-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .tab-btn {
+            padding: 10px 20px;
+            background: #e2e8f0;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #475569;
+            transition: all 0.3s;
+        }
+        
+        .tab-btn.active {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .conversation-starters {
+                grid-template-columns: 1fr;
+            }
+            
+            .policy-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .policy-row label {
+                flex: none;
+            }
+            
+            .policy-row input,
+            .policy-row select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧠 LimitX Intelligence Dashboard</h1>
+            <p>AI-Powered Digital Wellness Insights for Your Child</p>
+        </div>
+        
+        <!-- Login Section -->
+        <div id="loginSection" class="login-box">
+            <h2 style="margin-bottom: 15px; color: #0c4a6e;">Access Intelligence Dashboard</h2>
+            <p style="color: #64748b; margin-bottom: 25px;">
+                Enter your blockchain key to view AI-powered insights and generate reports.
+            </p>
+            
+            <div class="input-group">
+                <label for="blockchainKey">Blockchain Key:</label>
+                <input 
+                    type="text" 
+                    id="blockchainKey" 
+                    placeholder="xxxxxxxx-xxxxxxxx-xxxxxxxx-xxxxxxxx-..."
+                    autocomplete="off"
+                >
+            </div>
+            
+            <button class="btn" onclick="loadIntelligenceDashboard()">Access Dashboard</button>
+            
+            <div id="loginError" style="margin-top: 20px;"></div>
+            
+            <div style="margin-top: 25px; padding-top: 20px; border-top: 2px solid #e2e8f0; text-align: center;">
+                <p style="color: #64748b; font-size: 0.9rem;">
+                    <span style="color: #3b82f6;"><strong>Quick Test:</strong> Use key <code style="background: #f0f9ff; padding: 3px 8px; border-radius: 5px; border: 1px solid #bfdbfe;">1234</code> for admin/demo access</span>
+                </p>
+                <p style="color: #64748b; font-size: 0.9rem; margin-top: 10px;">
+                    New to LimitX? <a href="/" style="color: #3b82f6; text-decoration: none; font-weight: 600;">Use Classic Dashboard</a>
+                </p>
+            </div>
+        </div>
+        
+        <!-- Intelligence Dashboard -->
+        <div id="dashboard" class="dashboard">
+            <!-- Tab Navigation -->
+            <div class="section">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" onclick="switchTab('overview')">📊 Overview</button>
+                    <button class="tab-btn" onclick="switchTab('analytics')">📈 Analytics</button>
+                    <button class="tab-btn" onclick="switchTab('report')">📄 AI Report</button>
+                    <button class="tab-btn" onclick="switchTab('policy')">⚙️ Policy</button>
+                    <button class="tab-btn" onclick="switchTab('conversation')">💬 Conversation Starters</button>
+                </div>
+            </div>
+            
+            <!-- Overview Tab -->
+            <div id="tab-overview" class="tab-content active">
+                <!-- Sentiment Score -->
+                <div class="section">
+                    <h2>
+                        Emotional Health Score
+                        <span id="sentimentBadge" class="sentiment-badge sentiment-neutral">Neutral</span>
+                    </h2>
+                    <p style="color: #64748b; margin-bottom: 15px;">
+                        AI-powered sentiment analysis of your child's digital behavior patterns
+                    </p>
+                    <div style="background: #f8fafc; padding: 20px; border-radius: 10px;">
+                        <div style="font-size: 3rem; font-weight: bold; color: #3b82f6; text-align: center;" id="sentimentScore">0.00</div>
+                        <div style="text-align: center; color: #64748b; margin-top: 10px;">
+                            Score ranges from -1.0 (concerning) to +1.0 (healthy)
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Quick Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Most Used App</h3>
+                        <div class="value" style="font-size: 1.5rem;" id="topApp">-</div>
+                        <div class="label" id="topAppCount">-</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <h3>Weekly Screen Time</h3>
+                        <div class="value" id="weeklyScreenTime">0</div>
+                        <div class="label">minutes average</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <h3>Blocked Attempts</h3>
+                        <div class="value" style="color: #ef4444;" id="blockedCount">0</div>
+                        <div class="label">NSFW content blocked</div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <h3>Positive Patterns</h3>
+                        <div class="value" style="color: #10b981;" id="positiveCount">0</div>
+                        <div class="label">healthy behaviors</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Analytics Tab -->
+            <div id="tab-analytics" class="tab-content">
+                <div class="section">
+                    <h2>📈 Behavioral Analytics</h2>
+                    <p style="color: #64748b; margin-bottom: 25px;">
+                        Visual insights into your child's digital activity patterns
+                    </p>
+                    
+                    <div class="charts-grid">
+                        <div class="chart-container">
+                            <h3>Top Applications</h3>
+                            <canvas id="chartTopApps"></canvas>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <h3>Screen Time Trend</h3>
+                            <canvas id="chartScreenTime"></canvas>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <h3>Keyword Sentiment</h3>
+                            <canvas id="chartKeywords"></canvas>
+                        </div>
+                        
+                        <div class="chart-container">
+                            <h3>Blocked Attempts Timeline</h3>
+                            <canvas id="chartBlocked"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Report Tab -->
+            <div id="tab-report" class="tab-content">
+                <div class="section">
+                    <h2>📄 AI-Generated Report</h2>
+                    <div class="btn-group">
+                        <button class="btn success" onclick="generateAIReport()">🤖 Generate New Report</button>
+                        <button class="btn" onclick="downloadReport('full')">📥 Download Full Report</button>
+                        <button class="btn secondary" onclick="downloadReport('redacted')">📥 Download Redacted</button>
+                    </div>
+                    
+                    <div id="reportContent" style="margin-top: 30px;"></div>
+                </div>
+            </div>
+            
+            <!-- Policy Tab -->
+            <div id="tab-policy" class="tab-content">
+                <div class="section">
+                    <h2>⚙️ Screen Time Policy</h2>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <button class="btn secondary" onclick="loadRecommendedPolicy()">💡 Load AI Recommendations</button>
+                    </div>
+                    
+                    <div class="policy-editor">
+                        <h3 style="margin-bottom: 20px; color: #0c4a6e;">Current Policy Settings</h3>
+                        
+                        <div class="policy-row">
+                            <label>Daily Screen Time Limit:</label>
+                            <input type="number" id="policyDailyLimit" value="120" min="0" max="480">
+                            <span style="color: #64748b;">minutes</span>
+                        </div>
+                        
+                        <div class="policy-row">
+                            <label>Weekend Limit:</label>
+                            <input type="number" id="policyWeekendLimit" value="180" min="0" max="600">
+                            <span style="color: #64748b;">minutes</span>
+                        </div>
+                        
+                        <div class="policy-row">
+                            <label>Bedtime Hour:</label>
+                            <input type="time" id="policyBedtime" value="21:30">
+                        </div>
+                        
+                        <div class="policy-row">
+                            <label>Auto-Apply Policy:</label>
+                            <input type="checkbox" id="policyAutoApply" checked style="flex: none; width: auto;">
+                        </div>
+                        
+                        <div class="btn-group">
+                            <button class="btn success" onclick="savePolicy()">💾 Save Policy</button>
+                            <button class="btn secondary" onclick="simulatePolicy()">🔮 Simulate Impact</button>
+                        </div>
+                        
+                        <div id="policyResult" style="margin-top: 20px;"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Conversation Starters Tab -->
+            <div id="tab-conversation" class="tab-content">
+                <div class="section">
+                    <h2>💬 Conversation Starters</h2>
+                    <p style="color: #64748b; margin-bottom: 25px;">
+                        AI-generated topics to help you connect with your child about their digital life
+                    </p>
+                    
+                    <div id="conversationStarters" class="conversation-starters">
+                        <!-- Conversation starters will be inserted here -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Logout -->
+            <div class="section">
+                <button class="btn danger" onclick="logout()">🚪 Logout</button>
+            </div>
+        </div>
+        
+        <!-- Loading -->
+        <div id="loadingSection" class="loading" style="display: none;">
+            <div class="spinner"></div>
+            <p style="color: #0c4a6e; font-size: 1.2rem; font-weight: 600;" id="loadingText">Loading intelligence data...</p>
+        </div>
+    </div>
+    
+    <script>
+        let currentKey = null;
+        let intelligenceData = null;
+        let charts = {};
+        
+        // Tab switching
+        function switchTab(tabName) {
+            // Update button states
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update content visibility
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+        }
+        
+        // Main dashboard loader
+        async function loadIntelligenceDashboard() {
+            const key = document.getElementById('blockchainKey').value.trim();
+            const errorDiv = document.getElementById('loginError');
+            
+            errorDiv.innerHTML = '';
+            
+            if (!key) {
+                errorDiv.innerHTML = '<div class="alert alert-error">Please enter a blockchain key</div>';
+                return;
+            }
+            
+            currentKey = key;
+            
+            // Show loading
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('loadingSection').style.display = 'block';
+            
+            try {
+                // Step 1: Sync intelligence data
+                document.getElementById('loadingText').textContent = 'Syncing intelligence data...';
+                const syncResponse = await fetch(`/api/intelligence/sync/${key}`, {
+                    method: 'POST'
+                });
+                
+                if (!syncResponse.ok) {
+                    throw new Error('Failed to sync intelligence data');
+                }
+                
+                // Step 2: Load intelligence data
+                document.getElementById('loadingText').textContent = 'Loading analytics...';
+                const intelResponse = await fetch(`/api/intelligence/${key}`);
+                
+                if (!intelResponse.ok) {
+                    throw new Error('Failed to load intelligence data');
+                }
+                
+                intelligenceData = await intelResponse.json();
+                
+                // Step 3: Display dashboard
+                document.getElementById('loadingText').textContent = 'Preparing dashboard...';
+                await displayDashboard();
+                
+            } catch (error) {
+                document.getElementById('loadingSection').style.display = 'none';
+                document.getElementById('loginSection').style.display = 'block';
+                errorDiv.innerHTML = `<div class="alert alert-error"><strong>Error:</strong> ${error.message}</div>`;
+            }
+        }
+        
+        async function displayDashboard() {
+            // Hide loading, show dashboard
+            document.getElementById('loadingSection').style.display = 'none';
+            document.getElementById('dashboard').classList.add('active');
+            
+            const behavioral = intelligenceData.behavioralData || {};
+            const emotionalTone = behavioral.emotionalTone || {};
+            
+            // Update sentiment score
+            const sentiment = emotionalTone.overallSentiment || 0;
+            document.getElementById('sentimentScore').textContent = sentiment.toFixed(2);
+            
+            const badge = document.getElementById('sentimentBadge');
+            if (sentiment > 0.3) {
+                badge.textContent = 'Positive & Healthy';
+                badge.className = 'sentiment-badge sentiment-positive';
+            } else if (sentiment < -0.3) {
+                badge.textContent = 'Needs Attention';
+                badge.className = 'sentiment-badge sentiment-concerning';
+            } else {
+                badge.textContent = 'Neutral';
+                badge.className = 'sentiment-badge sentiment-neutral';
+            }
+            
+            // Update stats
+            const apps = behavioral.mostUsedApps || [];
+            if (apps.length > 0) {
+                document.getElementById('topApp').textContent = apps[0].appName;
+                document.getElementById('topAppCount').textContent = `${apps[0].usageCount} uses`;
+            }
+            
+            const screenTime = behavioral.screenTimeData || {};
+            document.getElementById('weeklyScreenTime').textContent = screenTime.weeklyAverage || 0;
+            
+            const blocked = behavioral.blockedNSFWAttempts || [];
+            document.getElementById('blockedCount').textContent = blocked.length;
+            
+            const positiveHabits = intelligenceData.syntheticReport?.positiveHabits || [];
+            document.getElementById('positiveCount').textContent = positiveHabits.length;
+            
+            // Load charts
+            await loadAllCharts();
+            
+            // Load conversation starters
+            loadConversationStarters();
+            
+            // Load report if available
+            if (intelligenceData.syntheticReport) {
+                displayReport(intelligenceData.syntheticReport);
+            }
+        }
+        
+        async function loadAllCharts() {
+            const chartTypes = ['top_apps', 'screen_time', 'keyword_sentiment', 'blocked_attempts'];
+            
+            for (const type of chartTypes) {
+                try {
+                    const response = await fetch(`/api/analytics/${currentKey}/${type}`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        createChart(type, data);
+                    }
+                } catch (error) {
+                    console.error(`Error loading ${type} chart:`, error);
+                }
+            }
+        }
+        
+        function createChart(type, data) {
+            let canvasId;
+            
+            switch(type) {
+                case 'top_apps':
+                    canvasId = 'chartTopApps';
+                    break;
+                case 'screen_time':
+                    canvasId = 'chartScreenTime';
+                    break;
+                case 'keyword_sentiment':
+                    canvasId = 'chartKeywords';
+                    break;
+                case 'blocked_attempts':
+                    canvasId = 'chartBlocked';
+                    break;
+                default:
+                    return;
+            }
+            
+            const ctx = document.getElementById(canvasId);
+            
+            // Destroy existing chart if any
+            if (charts[type]) {
+                charts[type].destroy();
+            }
+            
+            charts[type] = new Chart(ctx, {
+                type: data.type,
+                data: {
+                    labels: data.labels,
+                    datasets: data.datasets
+                },
+                options: data.options || {
+                    responsive: true,
+                    maintainAspectRatio: true
+                }
+            });
+        }
+        
+        function loadConversationStarters() {
+            const starters = intelligenceData.conversationStarters || [];
+            const container = document.getElementById('conversationStarters');
+            
+            if (starters.length === 0) {
+                container.innerHTML = '<div class="alert alert-info">No conversation starters available yet. Sync more data to generate insights.</div>';
+                return;
+            }
+            
+            container.innerHTML = starters.map(starter => `
+                <div class="starter-card ${starter.type}">
+                    <h4>${starter.title}</h4>
+                    <p>${starter.message}</p>
+                    <div class="action">💡 ${starter.actionSuggestion}</div>
+                </div>
+            `).join('');
+        }
+        
+        async function generateAIReport() {
+            const btn = event.target;
+            btn.disabled = true;
+            btn.textContent = '🤖 Generating Report...';
+            
+            try {
+                const response = await fetch(`/api/report/generate/${currentKey}`, {
+                    method: 'POST'
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Failed to generate report');
+                }
+                
+                const result = await response.json();
+                
+                // Reload intelligence data to get the new report
+                const intelResponse = await fetch(`/api/intelligence/${currentKey}`);
+                intelligenceData = await intelResponse.json();
+                
+                displayReport(intelligenceData.syntheticReport);
+                
+                document.getElementById('reportContent').insertAdjacentHTML('afterbegin', 
+                    '<div class="alert alert-success">✅ Report generated successfully!</div>'
+                );
+                
+            } catch (error) {
+                document.getElementById('reportContent').innerHTML = 
+                    `<div class="alert alert-error">❌ Error: ${error.message}</div>`;
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '🤖 Generate New Report';
+            }
+        }
+        
+        function displayReport(report) {
+            if (!report) return;
+            
+            const html = `
+                <div class="report-section">
+                    <h3>Executive Summary</h3>
+                    <div class="report-content">
+                        <p>${report.executiveSummary || 'No summary available.'}</p>
+                    </div>
+                </div>
+                
+                <div class="report-section">
+                    <h3>Key Findings</h3>
+                    <div class="report-content">
+                        <ul>
+                            ${(report.keyFindings || []).map(finding => `<li>${finding}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="report-section">
+                    <h3>Positive Habits</h3>
+                    <div class="report-content">
+                        <ul>
+                            ${(report.positiveHabits || []).map(habit => `<li>✓ ${habit}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="report-section">
+                    <h3>Guidance for Parents</h3>
+                    <div class="report-content">
+                        <p>${report.guidanceForParents || 'Continue monitoring and maintaining open communication.'}</p>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('reportContent').innerHTML = html;
+        }
+        
+        function downloadReport(type) {
+            window.location.href = `/api/report/download/${currentKey}?type=${type}`;
+        }
+        
+        async function loadRecommendedPolicy() {
+            if (!intelligenceData.syntheticReport?.screenTimePolicy) {
+                alert('Generate a report first to get AI recommendations');
+                return;
+            }
+            
+            const policy = intelligenceData.syntheticReport.screenTimePolicy;
+            
+            document.getElementById('policyDailyLimit').value = policy.recommendedDailyLimit || 120;
+            document.getElementById('policyWeekendLimit').value = policy.weekendLimit || 180;
+            document.getElementById('policyBedtime').value = policy.suggestedBedtime || '21:30';
+            
+            document.getElementById('policyResult').innerHTML = 
+                `<div class="alert alert-info">💡 ${policy.reasoning || 'AI-recommended policy loaded'}</div>`;
+        }
+        
+        async function savePolicy() {
+            const policy = {
+                dailyLimitMinutes: parseInt(document.getElementById('policyDailyLimit').value),
+                weekendLimitMinutes: parseInt(document.getElementById('policyWeekendLimit').value),
+                bedtimeHour: document.getElementById('policyBedtime').value,
+                autoApply: document.getElementById('policyAutoApply').checked
+            };
+            
+            try {
+                const response = await fetch(`/api/policy/${currentKey}`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(policy)
+                });
+                
+                if (!response.ok) throw new Error('Failed to save policy');
+                
+                document.getElementById('policyResult').innerHTML = 
+                    '<div class="alert alert-success">✅ Policy saved successfully!</div>';
+                
+            } catch (error) {
+                document.getElementById('policyResult').innerHTML = 
+                    `<div class="alert alert-error">❌ Error: ${error.message}</div>`;
+            }
+        }
+        
+        function simulatePolicy() {
+            const daily = parseInt(document.getElementById('policyDailyLimit').value);
+            const current = intelligenceData.behavioralData?.screenTimeData?.weeklyAverage || 0;
+            
+            const reduction = ((current - daily) / current * 100).toFixed(1);
+            
+            let message = `<p><strong>Policy Impact Simulation:</strong></p>`;
+            
+            if (reduction > 0) {
+                message += `<p>✅ This policy would reduce screen time by approximately <strong>${reduction}%</strong></p>`;
+                message += `<p>💡 Estimated new daily average: <strong>${daily} minutes</strong></p>`;
+            } else {
+                message += `<p>⚠️ Current usage is below the proposed limit. Consider maintaining or slightly reducing.</p>`;
+            }
+            
+            document.getElementById('policyResult').innerHTML = 
+                `<div class="alert alert-info">${message}</div>`;
+        }
+        
+        function logout() {
+            currentKey = null;
+            intelligenceData = null;
+            
+            // Destroy charts
+            Object.values(charts).forEach(chart => chart.destroy());
+            charts = {};
+            
+            document.getElementById('dashboard').classList.remove('active');
+            document.getElementById('loginSection').style.display = 'block';
+            document.getElementById('blockchainKey').value = '';
+            
+            // Reset to overview tab
+            switchTab('overview');
+        }
+        
+        // Enter key support
+        document.getElementById('blockchainKey').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                loadIntelligenceDashboard();
+            }
+        });
+    </script>
+</body>
+</html>

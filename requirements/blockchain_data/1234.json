@@ -1,0 +1,39 @@
+{
+  "device_key": "1234",
+  "device_id": "TEST_DEVICE_ADMIN",
+  "blocks": [
+    {
+      "index": 1,
+      "deviceId": "TEST_DEVICE_ADMIN",
+      "appName": "Chrome Browser",
+      "keyword": "science homework",
+      "timestamp": 1731052800000,
+      "hash": "0000a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef",
+      "previousHash": "0",
+      "nonce": 12345
+    },
+    {
+      "index": 2,
+      "deviceId": "TEST_DEVICE_ADMIN",
+      "appName": "YouTube",
+      "keyword": "educational videos",
+      "timestamp": 1731056400000,
+      "hash": "0000b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef12",
+      "previousHash": "0000a1b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef",
+      "nonce": 23456
+    },
+    {
+      "index": 3,
+      "deviceId": "TEST_DEVICE_ADMIN",
+      "appName": "Chrome Browser",
+      "keyword": "math tutorials",
+      "timestamp": 1731060000000,
+      "hash": "0000c3d4e5f6789012345678901234567890abcdef1234567890abcdef1234",
+      "previousHash": "0000b2c3d4e5f6789012345678901234567890abcdef1234567890abcdef12",
+      "nonce": 34567
+    }
+  ],
+  "last_sync": "2025-11-08T10:00:00",
+  "app_version": "1.0.0",
+  "integrity_verified": true
+}
